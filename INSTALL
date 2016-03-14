@@ -1,13 +1,17 @@
 INSTALL
 =======
 
-To install cliapp from source with pip you can run,
+To install obnam from source with pip you can run,
 
 $ pip install .
 
-cliapp also uses the 'meliae' python memory usage analyzer
-which can be obtained from https://launchpad.net/meliae.
-meliae is also packaged in debian as 'python-meliae'.
+You will first need to install the dependencies, which are:
+
+paramiko
+cliapp: http://liw.fi/cliapp/
+larch: http://liw.fi/larch/
+ttystatus: http://liw.fi/ttystatus/
+python-tracing: http://liw.fi/tracing/
 
 
 Legalese
