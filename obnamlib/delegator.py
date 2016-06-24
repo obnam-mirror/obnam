@@ -171,7 +171,12 @@ class RepositoryDelegator(obnamlib.RepositoryInterface):
 
     def _require_got_client_lock(self, client_name):
         if not self.got_client_lock(client_name):
-            raise obnamlib.RepositoryClientNotLocked()
+            raise obnamlib.RepositoryClientNotLocked(client_name=client_name)
+
+    def flush_client(self, client_name):
+        self._require_got_client_lock(client_name)
+        client = self._lookup_client(client_name)
+        client.flush()
 
     def commit_client(self, client_name):
         self._require_got_client_lock(client_name)

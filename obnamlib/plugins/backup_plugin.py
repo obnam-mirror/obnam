@@ -406,6 +406,10 @@ class BackupPlugin(obnamlib.ObnamPlugin):
                 if e.errno in (errno.ENOSPC, errno.EPIPE):
                     raise
 
+            if metadata.isdir() and not self.pretend:
+                self.repo.flush_client(self.client_name)
+                self.app.dump_memory_profile('after flushing client')
+
             if self.checkpoint_manager.time_for_checkpoint():
                 self.make_checkpoint()
                 self.progress.what(pathname)

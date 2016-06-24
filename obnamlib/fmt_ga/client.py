@@ -74,6 +74,9 @@ class GAClient(object):
     def get_dirname(self):
         return self._dirname
 
+    def flush(self):
+        self._save_file_metadata()
+
     def commit(self):
         self._load_data()
         self._finish_current_generation_if_any()
