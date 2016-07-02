@@ -546,6 +546,8 @@ class RepositoryInterface(object):
     def flush_client(self, client_name):
         '''Flush cached data from client. This is not a commit.
 
+        This requires the client to be locked.
+
         This is a NOP, unless the a specific repository format gives
         it meaning.
 
