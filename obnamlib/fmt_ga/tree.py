@@ -136,6 +136,9 @@ class GATree(object):
         self._blob_store.flush()
         self._cache.clear()
 
+    def flush_ro(self):  # pragma: no cover
+        self._cache.clear()
+
     def _fixup_subdir_refs(self, pathname):
         dir_obj = self._cache.get(pathname)
         assert dir_obj is not None, 'expected %s in cache' % pathname

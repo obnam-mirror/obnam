@@ -77,6 +77,12 @@ class GAClient(object):
     def flush(self):
         self._save_file_metadata()
 
+    def flush_ro(self):
+        for gen in self._generations:
+            metadata = gen.get_file_metadata()
+            metadata.flush_ro()
+            gen.set_root_object_id(metadata.get_root_object_id())
+
     def commit(self):
         self._load_data()
         self._finish_current_generation_if_any()
@@ -508,6 +514,9 @@ class GAFileMetadata(object):
     def flush(self):
         assert len(self._added_files) == 0
         self._tree.flush()
+
+    def flush_ro(self):
+        self._tree.flush_ro()
 
     def __iter__(self):
         for filename in self._added_files:

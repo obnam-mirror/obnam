@@ -553,6 +553,16 @@ class RepositoryInterface(object):
 
         '''
 
+    def flush_ro_client(self, client_name):
+        '''Flush cached read-only data from client.
+
+        This does not require the client to be locked.
+
+        This is a NOP, unless the a specific repository format gives
+        it meaning.
+
+        '''
+
     def commit_client(self, client_name):
         '''Commit changes to client and DO NOT unlock it.
 

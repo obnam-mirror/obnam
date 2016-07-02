@@ -178,6 +178,10 @@ class RepositoryDelegator(obnamlib.RepositoryInterface):
         client = self._lookup_client(client_name)
         client.flush()
 
+    def flush_ro_client(self, client_name):
+        client = self._lookup_client(client_name)
+        client.flush_ro()
+
     def commit_client(self, client_name):
         self._require_got_client_lock(client_name)
         client = self._lookup_client(client_name)
