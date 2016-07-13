@@ -67,7 +67,7 @@ We need to ensure Obnam can handle anything it encounters, on any
 supported platform. That is the purpose of the scenarios in this
 section. There are some limitations, though: the test suite is not run
 as the `root` user, and thus we don't deal with filesystem objects
-that require priviledged operations such as device node creation. We
+that require privileged operations such as device node creation. We
 also don't, in these scenarios, handle multiple filesystem types: the
 test suite should, instead, be run multiple types, with `TMPDIR` set
 to point at a different filesystem type each time: we leave that to

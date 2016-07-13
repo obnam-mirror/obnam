@@ -29,7 +29,7 @@ class WholeFileCheckSummer(object):
     in the file. For everything else, compute the checksum from (size,
     checksum) pairs for all the chunks in the file. This convoluted
     thing is because the latter is necessary for speed, and the former
-    is necessary for backwards compatibilty.
+    is necessary for backwards compatibility.
 
     '''
 

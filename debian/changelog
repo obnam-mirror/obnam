@@ -135,7 +135,7 @@ obnam (1.7.2-1) unstable; urgency=low
   * Drop dependency on python-yaml, since yaml is no longer used.
   * Drop python-coverage-test-runner build-dependency to 0.8, which is
     in Debian. Newer upstream versions have no functional changes, so
-    are not uploaded to Debian. This should allow Debian buildds to
+    are not uploaded to Debian. This should allow Debian builds to
     build the package.
   * debian/control: Update format and source URLs.
 
@@ -193,7 +193,7 @@ obnam (1.4-1) unstable; urgency=low
 
   * New upstream release.
   * Bump python-larch, python-ttystatus, python-cliapp, summain,
-    and cmdtest depenencies to current versions.
+    and cmdtest dependencies to current versions.
 
  -- Lars Wirzenius <liw@liw.fi>  Sat, 16 Mar 2013 11:29:12 +0000
 
@@ -363,7 +363,7 @@ obnam (0.22-2) unstable; urgency=low
 obnam (0.22-1) unstable; urgency=low
 
   * New upstream release.
-  * debian/control: Update versioned depedendency on python-cliapp. Upstream
+  * debian/control: Update versioned dependency on python-cliapp. Upstream
     now uses the dump_config feature in cliapp 0.18.
 
  -- Lars Wirzenius <liw@liw.fi>  Thu, 25 Aug 2011 08:31:10 +0100

@@ -109,7 +109,7 @@ class ClientMetadataTree(obnamlib.RepositoryTree):
         * the subkey type (8 bits)
         * type subkey (64 bits)
 
-        These are catenated.
+        These are concatenated.
 
         mainhash must be a string of 8 bytes.
 

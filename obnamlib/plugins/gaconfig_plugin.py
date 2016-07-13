@@ -34,7 +34,7 @@ class FormatGreenAlbatrossConfigPlugin(obnamlib.ObnamPlugin):
 
         self.app.settings.bytesize(
             ['dir-bag-size'],
-            'approximage maximum size of bags combining many DIR objects',
+            'approximate maximum size of bags combining many DIR objects',
             metavar='SIZE',
             default=obnamlib.DEFAULT_DIR_BAG_BYTES,
             group=ga_group)

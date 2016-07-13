@@ -42,7 +42,7 @@ Verify notices when live data file has been appended to
 -------------------------------------------------------
 
 In March, 2015, Thomas Waldemann noticed that `obnam verify` would
-fail to notice if the live data file had been appened to. This
+fail to notice if the live data file had been appended to. This
 regression test catches the problem.
 
     SCENARIO verify file that has been appended to

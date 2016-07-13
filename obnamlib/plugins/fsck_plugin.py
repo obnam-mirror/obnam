@@ -259,7 +259,7 @@ class FsckPlugin(obnamlib.ObnamPlugin):
 
         self.app.settings.string_list(
             ['fsck-ignore-client'],
-            'do not check repository data for cient NAME',
+            'do not check repository data for client NAME',
             metavar='NAME',
             group=group)
 

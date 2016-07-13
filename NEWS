@@ -32,6 +32,8 @@ Bug fixes:
 * The manual and manual page used to claim you could break only the
   locks for one client. This was not true. The manuals has been fixed.
 
+* A whole bunch of typo fixes, from Andrea Gelmini.
+
 Version 1.19.1, released 2016-01-30
 ---------------------------------
 
@@ -78,7 +80,7 @@ Version 1.18.2, released 2015-11-15
 
 Bug fixes:
 
-* The `--exclude-caches` option now works correctly again. Prevoiusly
+* The `--exclude-caches` option now works correctly again. Previously
   it would exclude a cache directory, but would scan through and back
   up the contents of the cache directory. As a result, the backup
   generation would be much bigger, but have hidden files, not visible
@@ -103,7 +105,7 @@ Bug fixes:
 * William Boughton fixed parsing for sftp URLs with IPv6 addresses.
   Previously, `sftp://[::1]` would be interpreted by Obnam as an
   address `[` followed by the port `:1]`, but now it is correctly
-  interpreted as the adddress `::1` and no explicit port.
+  interpreted as the address `::1` and no explicit port.
 
 * Ian Campbell fixed a bug in the kdirstat plugin, improving the
   handling of unknown file types.
@@ -148,7 +150,7 @@ Version 1.16, released 2015-09-06
   gets run automatically by the test suite.
 
   This includes a fix in `exclude_pathnames_plugin.py` to add a missing
-  import and fix variable namaes, by Diane Trout. A similar fix was
+  import and fix variable names, by Diane Trout. A similar fix was
   also contributed by Mesar Hameed.
 
 * Lukáš Poláček fixed an unlocking problem when GnuPG fails during an
@@ -572,7 +574,7 @@ Bug fixes:
   extra files, such as "lock" (left there by a previous, crashed Obnam
   run). It no longer does. Fix by Lars Kruse.
 
-* The SFTP plugin now handles another error code (EACCESS) when writing
+* The SFTP plugin now handles another error code (EACCES) when writing
   a file and the directory it should go into not existing. Patch by
   Armin Größlinger.
 
@@ -649,7 +651,7 @@ Bug fixes:
   `add-key` and `remove-key` subcommands. Reported by Lars Kruse.
 * Restoring symlinks as root would fail. Reported and fixed by
   David Fries.
-* Only set ssh user/port if explicitily requested, otherwise let ssh
+* Only set ssh user/port if explicitly requested, otherwise let ssh
   select them.  Reported by Michael Goetze, fixed by David Fries.
 * Fix problem with old version of paramiko and chdir. Fixed by Nick Altmann.
 * Fix problems with signed vs unsigned values for struct stat fields.
@@ -731,7 +733,7 @@ Bug fixes:
   with `/~/` which already exist without crashing.
 * Character and block device nodes are now restored correctly.
   Thanks to Martin Dummer for the bug report.
-* The symmteric key for a toplevel repository directory is re-encrypted
+* The symmetric key for a toplevel repository directory is re-encrypted
   when a public key is added or removed to the toplevel using the
   `add-key` or `remove-key` subcommands.
 * Manual page typo fix. Thanks, Steve Kemp.
@@ -963,7 +965,7 @@ INTERNAL CHANGES:
 
 * Got rid of terminal status plugin. Now, the `Application` class provides
   a `ttystatus.TerminalStatus` instance instead, in the `ts` attribute.
-  Other plugings are supposed to use that for progress reporting and
+  Other plugins are supposed to use that for progress reporting and
   messaging to the user.
 * The `posix_fadvise` system call is used only if available. This should
   improve Obnam's portability a bit.

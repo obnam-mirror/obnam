@@ -37,7 +37,7 @@ do!), including the following information is helpful and makes it
 easier to figure out what the problem is.
 
 * You should report problems to the `obnam-support@obnam.org` mailing
-  list. This is a publically archived mailing list where various
+  list. This is a publicly archived mailing list where various
   people help others use Obnam.
 
 * What is the problem? What did you try to achieve? What actually

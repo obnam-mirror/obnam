@@ -95,7 +95,7 @@ class GADirectoryTests(unittest.TestCase):
             dir_obj.get_file_key('README', obnamlib.REPO_FILE_MODE),
             0123)
 
-    def test_raises_error_if_muutable_and_file_key_is_set(self):
+    def test_raises_error_if_mutable_and_file_key_is_set(self):
         dir_obj = obnamlib.GADirectory()
         dir_obj.add_file('README')
         dir_obj.set_immutable()

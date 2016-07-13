@@ -32,7 +32,7 @@ installiert:
 
 Wenn Sie den Profiler installiert haben, können Sie Obnam wie folgt starten:
 
-    OBNAM_PROFILE=backup.prof obnam bsckup
+    OBNAM_PROFILE=backup.prof obnam backup
 
 So werden die Profiling-Daten in die Daten `backup.prof` geschrieben.
 Sie können das natürlich mit jedem Obnamm so tun und in ein beliebiges Feil schreiben

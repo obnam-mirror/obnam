@@ -258,7 +258,7 @@ Scenarios involving encryption may also use a private keyring directory.
 
     add_to_config "$MATCH_1" encrypt-with "$MATCH_2"
 
-Encryption scenarions, at least, also need users that pretend to be
+Encryption scenarios, at least, also need users that pretend to be
 someone else.
 
     IMPLEMENTS GIVEN a user (\S+) calling themselves (\S+)
@@ -433,7 +433,7 @@ Check that there are no checkpoint generations.
     IMPLEMENTS THEN user (\S+) sees no checkpoint generations in repository (\S+)
     run_obnam "$MATCH_1" generations -r "$DATADIR/$MATCH_2" \
         > "$DATADIR/generation.list"
-    if grep checkoint "$DATADIR/generation.list"
+    if grep checkpoint "$DATADIR/generation.list"
     then
         echo "Can see checkpoint generations!" 1>&2
         exit 1
@@ -671,7 +671,7 @@ Some tests won't work correctly when `root` is running them.
     test "$(id -u)" != 0
 
 For testing FUSE stuff, we need to check that the relevant stuff is
-avaialble. Previously, we did this by checking that the user running
+available. Previously, we did this by checking that the user running
 the test suite was in the group `fuse`, but that turns out to have
 been a Debianism (removed in the Debian `jessie` release). A better
 check is to check that the `fusermount` command is available.

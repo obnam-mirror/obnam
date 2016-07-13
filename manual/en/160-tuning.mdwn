@@ -30,7 +30,7 @@ the following, you have not got the profiler installed:
 
 Once you have the profiler installed, run Obnam like this:
 
-    OBNAM_PROFILE=backup.prof obnam bsckup
+    OBNAM_PROFILE=backup.prof obnam backup
 
 This will cause the profiling data to be written to the file
 `backup.prof`. You can do this for any Obnam command, and write it to

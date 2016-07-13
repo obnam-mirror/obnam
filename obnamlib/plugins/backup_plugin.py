@@ -290,7 +290,7 @@ class BackupPlugin(obnamlib.ObnamPlugin):
         self.repo.commit_client(self.client_name)
         self.repo.unlock_client(self.client_name)
 
-        self.progress.what(prefix + ': commiting shared chunk indexes')
+        self.progress.what(prefix + ': committing shared chunk indexes')
         self.repo.commit_chunk_indexes()
 
         self.progress.what(prefix + ': removing unused chunks')

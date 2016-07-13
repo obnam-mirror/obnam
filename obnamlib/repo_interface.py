@@ -1527,7 +1527,7 @@ class RepositoryInterfaceTests(unittest.TestCase):  # pragma: no cover
             self.repo.get_client_generation_ids('fooclient'),
             [new_id])
 
-    def test_returns_direcotry_name_for_extra_data(self):
+    def test_returns_directory_name_for_extra_data(self):
         self.setup_client()
         self.assertTrue(
             type(self.repo.get_client_extra_data_directory('fooclient')),
