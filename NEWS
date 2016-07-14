@@ -34,6 +34,9 @@ Bug fixes:
 
 * A whole bunch of typo fixes, from Andrea Gelmini.
 
+* Michel Alexandre Salim fixed a bug in the FUSE (obnam mount) plugin,
+  which was a typo in a method name (`get_clientgeneration_ids`).
+
 Version 1.19.1, released 2016-01-30
 ---------------------------------
 
