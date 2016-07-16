@@ -28,6 +28,11 @@ class WrongNumberOfGenerationSettingsError(obnamlib.ObnamError):
     msg = 'The restore command wants exactly one generation option'
 
 
+class NoToError(obnamlib.ObnamError):
+
+    msg = 'The restore command wants a target set with --to'
+
+
 class RestoreErrors(obnamlib.ObnamError):
 
     msg = '''There were errors when restoring
@@ -123,6 +128,9 @@ class RestorePlugin(obnamlib.ObnamPlugin):
         self.app.settings.require('client-name')
         self.app.settings.require('generation')
         self.app.settings.require('to')
+
+        if not self.app.settings['to']:
+            raise NoToError()
 
         logging.debug(
             'restoring generation %s', self.app.settings['generation'])

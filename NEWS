@@ -37,6 +37,9 @@ Bug fixes:
 * Michel Alexandre Salim fixed a bug in the FUSE (obnam mount) plugin,
   which was a typo in a method name (`get_clientgeneration_ids`).
 
+* Lars Wirzenius fixed `obnam restore` to require a target set with
+  `--to`. Jonathan Dowland reported the problem.
+
 Version 1.19.1, released 2016-01-30
 ---------------------------------
 
