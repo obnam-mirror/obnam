@@ -4,12 +4,18 @@ Obnam NEWS
 This file summarizes changes between releases of Obnam.
 
 NOTE: Obnam has an **EXPERIMENTAL** repository format under
-development, called `green-albatross`. It is **NOT** meant for real
-use. It is likely to change in incompatible ways without warning. Do
-not use it unless you're willing to lose your backup.
+development, called `green-albatross-YYYYMMDD`. It is **NOT** meant
+for real use. It is likely to change in incompatible ways without
+warning. Do not use it unless you're willing to lose your backup.
 
 Version 1.20, not yet released
 ---------------------------------
+
+* The format name for `green-albatross` is renamed to
+  `green-albatross-20160718` and will henceforth be renamed every time
+  there's a change, to avoid confusing Lars because of backwards
+  incompatibilities. When it reaches stability and the on-disk format
+  is frozen, it'll be renamed back to a date-less version.
 
 * Those using the experimental green-albatross repository format will
   have to start over with fresh repositories. This release contains

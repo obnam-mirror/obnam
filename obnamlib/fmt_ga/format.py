@@ -19,9 +19,12 @@
 import obnamlib
 
 
+GREEN_ALBATROSS_VERSION = 'green-albatross-20160718'
+
+
 class RepositoryFormatGA(obnamlib.RepositoryDelegator):
 
-    format = 'green-albatross'
+    format = GREEN_ALBATROSS_VERSION
 
     def __init__(self, **kwargs):
         obnamlib.RepositoryDelegator.__init__(self, **kwargs)

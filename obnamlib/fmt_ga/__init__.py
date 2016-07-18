@@ -15,11 +15,10 @@
 #
 # =*= License: GPL-3+ =*=
 
-
 from .client_list import GAClientList
 from .chunk_store import GAChunkStore
 from .indexes import GAChunkIndexes
 from .dirobj import GADirectory, GAImmutableError, create_gadirectory_from_dict
 from .tree import GATree
 from .client import GAClient
-from .format import RepositoryFormatGA
+from .format import RepositoryFormatGA, GREEN_ALBATROSS_VERSION

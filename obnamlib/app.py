@@ -88,8 +88,9 @@ class App(cliapp.Application):
 
         self.settings.choice(
             ['repository-format'],
-            ['6', 'green-albatross'],
-            'use FORMAT for new repositories; one of "6", "green-albatross"',
+            ['6', obnamlib.GREEN_ALBATROSS_VERSION],
+            'use FORMAT for new repositories; '
+            'one of "6", "{}"'.format(obnamlib.GREEN_ALBATROSS_VERSION),
             metavar='FORMAT')
 
         algos = list(obnamlib.checksum_algorithms)
@@ -285,7 +286,7 @@ class App(cliapp.Application):
     def get_default_repository_class(self):
         classes = {
             '6': obnamlib.RepositoryFormat6,
-            'green-albatross': obnamlib.RepositoryFormatGA,
+            obnamlib.GREEN_ALBATROSS_VERSION: obnamlib.RepositoryFormatGA,
             }
         return classes[self.settings['repository-format']]
 

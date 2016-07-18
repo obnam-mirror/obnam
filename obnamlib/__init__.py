@@ -176,6 +176,7 @@ from .backup_progress import BackupProgress
 #
 
 from .fmt_ga import (
+    GREEN_ALBATROSS_VERSION,
     RepositoryFormatGA,
     GAClientList,
     GAClient,
