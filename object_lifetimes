@@ -40,7 +40,7 @@ class ObjectLifetimes(cliapp.Application):
 
     def delete(self, timestamp, obj_id, obj_size):
         obj_class, created = self.objects[obj_id]
-        self.deleted.append((obj_class, obj_size, created, timestamp))
+        self.deleted.append((obj_class, int(obj_size), created, timestamp))
         del self.objects[obj_id]
 
     def process_input_line(self, filename, line):
@@ -58,21 +58,28 @@ class ObjectLifetimes(cliapp.Application):
         return time.mktime((y, m, d, h, min, s, 0, 0, -1))
 
     def report_max_by_class(self, lifetimes):
-        current = {}  # class to current size
+        factor = {
+            'CREATE': +1,
+            'DELETE': -1,
+        }
+
+        current = {}  # class to (object count, cumulative size)
         max_size = {}  # class to max size
         events = list(sorted(self.events(lifetimes)))
         for timestamp, event, obj_class, obj_size in events:
-            if event == 'CREATE':
-                current[obj_class] = current.get(obj_class, 0) + int(obj_size)
-            elif event == 'DELETE':
-                current[obj_class] = current.get(obj_class, 0) - int(obj_size)
-            max_size[obj_class] = max(
-                max_size.get(obj_class, 0),
-                current[obj_class])
+            count, total_size = current.get(obj_class, (0, 0))
+            count += factor[event] * 1
+            total_size += factor[event] * obj_size
+            current[obj_class] = (count, total_size)
+
+            old_max_size, old_count = max_size.get(obj_class, (0, 0))
+            if total_size > old_max_size:
+                max_size[obj_class] = (total_size, count)
 
         self.output.write('Max cumulative size at any one time:\n')
         for obj_class in sorted(max_size.keys()):
-            self.output.write('{} {}\n'.format(max_size[obj_class], obj_class))
+            size, count = max_size[obj_class]
+            self.output.write('{} {} {}\n'.format(size, count, obj_class))
 
     def events(self, lifetimes):
         for obj_class, obj_size, created, deleted in lifetimes:
