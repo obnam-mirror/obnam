@@ -28,10 +28,14 @@ class GAChunkIndexes(object):
     _well_known_blob = 'root'
 
     def __init__(self):
+        obnamlib.object_created(self)
         self._fs = None
         self._checksum_name = None
         self.set_dirname('chunk-indexes')
         self.clear()
+
+    def __del__(self):
+        obnamlib.object_deleted(self, self._data)
 
     def set_fs(self, fs):
         self._fs = fs
