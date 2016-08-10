@@ -86,8 +86,12 @@ class BlobStore(object):
 class BlobCache(object):
 
     def __init__(self):
+        obnamlib.object_created(self)
         self._max_bytes = None
         self._clear()
+
+    def __del__(self):
+        obnamlib.object_deleted(self, self._cache)
 
     def _clear(self):
         self._cache = {}
