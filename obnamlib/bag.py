@@ -22,9 +22,13 @@ import obnamlib
 class Bag(object):
 
     def __init__(self):
+        obnamlib.object_created(self)
         self._bag_id = None
         self._blobs = []
         self._blobs_bytes = 0
+
+    def __del__(self):
+        obnamlib.object_deleted(self, self._blobs)
 
     def get_id(self):
         return self._bag_id
