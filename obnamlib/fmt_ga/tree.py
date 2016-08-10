@@ -158,7 +158,16 @@ class GATree(object):
 class DirectoryObjectCache(object):
 
     def __init__(self):
+        obnamlib.object_created(self)
         self.clear()
+
+    def __del__(self):
+        obnamlib.object_deleted(
+            self,
+            {
+                key: self._objs[key].as_dict()
+                for key in self._objs
+            })
 
     def clear(self):
         self._objs = {}
