@@ -15,6 +15,7 @@ obnamlib/fmt_simple/__init__.py
 obnamlib/fsck_work_item.py
 obnamlib/humanise.py
 obnamlib/__init__.py
+obnamlib/objlifetime.py
 obnamlib/obnamerror.py
 obnamlib/plugins/backup_plugin.py
 obnamlib/plugins/compression_plugin.py

@@ -57,6 +57,8 @@ except ImportError:
     _obnam = DummyExtension()
 
 
+from .objlifetime import object_created, object_deleted
+
 from .sizeparse import SizeSyntaxError, UnitNameError, ByteSizeParser
 
 from .encryption import (
