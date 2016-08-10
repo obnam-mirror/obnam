@@ -81,6 +81,7 @@ class Metadata(object):
     '''
 
     def __init__(self, **kwargs):
+        obnamlib.object_created(self)
         self.md5 = None  # Silence pylint.
         self.st_size = None  # Silence pylint.
         self.st_mode = None  # Silence pylint.
@@ -90,6 +91,9 @@ class Metadata(object):
             setattr(self, field, None)
         for field, value in kwargs.iteritems():
             setattr(self, field, value)
+
+    def __del__(self):
+        obnamlib.object_deleted(self, repr(self))
 
     def isdir(self):
         return self.st_mode is not None and stat.S_ISDIR(self.st_mode)
