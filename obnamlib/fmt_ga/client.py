@@ -403,7 +403,11 @@ class GAClient(object):
 class GAKeys(object):
 
     def __init__(self):
+        obnamlib.object_created(self)
         self._dict = {}
+
+    def __del__(self):
+        obnamlib.object_deleted(self, self._dict)
 
     def as_dict(self):
         return self._dict
@@ -757,7 +761,20 @@ class GAFileMetadata(object):
 class AddedFiles(object):
 
     def __init__(self):
+        obnamlib.object_created(self)
         self.clear()
+
+    def __del__(self):
+        mangled_files = {}
+        for filename in self._files:
+            mangled_files[filename] = {
+                'keys': {
+                    str(key): value
+                    for key, value in self._files[filename]['keys'].items()
+                },
+                'chunks': self._files[filename]['chunks'],
+            }
+        obnamlib.object_deleted(self, mangled_files)
 
     def clear(self):
         self._files = {}
