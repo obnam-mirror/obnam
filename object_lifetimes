@@ -1,0 +1,87 @@
+#!/usr/bin/env python2
+# Copyright 2016  Lars Wirzenius
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# =*= License: GPL-3+ =*=
+
+
+import re
+import time
+
+import cliapp
+
+
+class ObjectLifetimes(cliapp.Application):
+
+    def setup(self):
+        self.objects = {}
+        self.deleted = []
+
+    def cleanup(self):
+        self.report_max_by_class(self.deleted)
+
+    def create(self, timestamp, obj_class, obj_id):
+        if obj_id in self.objects:
+            raise cliapp.AppException(
+                'object %s has already been created' % obj_id)
+        self.objects[obj_id] = (obj_class, timestamp)
+
+    def delete(self, timestamp, obj_id, obj_size):
+        obj_class, created = self.objects[obj_id]
+        self.deleted.append((obj_class, obj_size, created, timestamp))
+        del self.objects[obj_id]
+
+    def process_input_line(self, filename, line):
+        words = line.split()
+        if re.match(r'^\d+-\d+-\d+ \d+:\d+:\d+ ', line):
+            timestamp = self.parse_timestamp(words[0], words[1])
+        if len(words) == 6 and words[3] == 'object_created:':
+            self.create(timestamp, words[4], words[5])
+        elif len(words) == 6 and words[3] == 'object_deleted:':
+            self.delete(timestamp, words[4], words[5])
+
+    def parse_timestamp(self, date, clock):
+        y, m, d = map(int, date.split('-'))
+        h, min, s = map(int, clock.split(':'))
+        return time.mktime((y, m, d, h, min, s, 0, 0, -1))
+
+    def report_max_by_class(self, lifetimes):
+        current = {}  # class to current size
+        max_size = {}  # class to max size
+        events = list(sorted(self.events(lifetimes)))
+        for timestamp, event, obj_class, obj_size in events:
+            if event == 'CREATE':
+                current[obj_class] = current.get(obj_class, 0) + int(obj_size)
+            elif event == 'DELETE':
+                current[obj_class] = current.get(obj_class, 0) - int(obj_size)
+            max_size[obj_class] = max(
+                max_size.get(obj_class, 0),
+                current[obj_class])
+
+        self.output.write('Max cumulative size at any one time:\n')
+        for obj_class in sorted(max_size.keys()):
+            self.output.write('{} {}\n'.format(max_size[obj_class], obj_class))
+
+    def events(self, lifetimes):
+        for obj_class, obj_size, created, deleted in lifetimes:
+            yield created, 'CREATE', obj_class, obj_size
+            yield deleted, 'DELETE', obj_class, obj_size
+
+    def sort_by_creation(self, lifetimes):
+        return sorted(lifetimes, key=lambda t: t[2])
+        
+
+
+ObjectLifetimes().run()
