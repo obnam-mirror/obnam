@@ -53,11 +53,15 @@ _key_from_short = dict((v, k) for k, v in _short_key_names.items())
 class GADirectory(object):
 
     def __init__(self):
+        obnamlib.object_created(self)
         self._dict = {
             'metadata': {},
             'subdirs': {},
         }
         self._mutable = True
+
+    def __del__(self):
+        obnamlib.object_deleted(self, self._dict)
 
     def is_mutable(self):
         return self._mutable
