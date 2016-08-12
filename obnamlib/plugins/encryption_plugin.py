@@ -39,6 +39,7 @@ class EncryptionPlugin(obnamlib.ObnamPlugin):
             ['weak-random'],
             'use /dev/urandom instead of /dev/random '
             'to generate symmetric keys',
+            default=True,
             group=encryption_group)
         self.app.settings.boolean(
             ['key-details'],

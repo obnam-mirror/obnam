@@ -25,6 +25,12 @@ Version 1.20, not yet released
 * Remi Rampin started updating and continuing the French translation
   of the Obnam manual.
 
+* Lars Wirzenius changed the default so that Obnam reads random data
+  when creating encryption key from `/dev/urandom` instead of
+  `/dev/random`. The goal is to make it less likely that Obnam stops
+  at the key generation stage on machines with little entropy. Set
+  `weak-random = no` in your configuration to override this.
+
 Minor changes:
 
 * Lars Wirzenius changed `obnam forget` so that if there is nothing to
