@@ -39,6 +39,11 @@ Minor changes:
 * Lars Wirzenius added a chapter on participating in the Obnam project
   to the manual.
 
+* Lars Wirzenius changed `--one-file-system` to work for bind mounts.
+  It only works for bind mounts that exist at the time when Obnam
+  starts, however. Also, `/proc/mounts` must be an accurate list of
+  mount points.
+
 Bug fixes:
 
 * The manual and manual page used to claim you could break only the

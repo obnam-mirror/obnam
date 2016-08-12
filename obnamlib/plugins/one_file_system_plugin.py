@@ -34,7 +34,21 @@ class OneFileSystemPlugin(obnamlib.ObnamPlugin):
 
     def config_loaded(self):
         if self.app.settings['one-file-system']:
+            self.load_mount_points()
             self.app.hooks.add_callback('backup-exclude', self.exclude)
+
+    def load_mount_points(self):
+        try:
+            with open('/proc/mounts', 'r') as f:
+                self.mount_points = self.parse_proc_mounts(f)
+        except EnvironmentError:
+            pass
+
+    def parse_proc_mounts(self, f):
+        return [
+            line.split()[1]
+            for line in f
+        ]
 
     def exclude(self, **kwargs):
         st = kwargs['stat_result']
@@ -42,6 +56,6 @@ class OneFileSystemPlugin(obnamlib.ObnamPlugin):
         pathname = kwargs['pathname']
         exclude = kwargs['exclude']
 
-        if st.st_dev != root_metadata.st_dev:
+        if st.st_dev != root_metadata.st_dev or pathname in self.mount_points:
             logging.debug('Excluding (one-file-system): %s', pathname)
             exclude[0] = True
