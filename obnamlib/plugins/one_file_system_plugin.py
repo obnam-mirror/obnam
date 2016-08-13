@@ -38,6 +38,7 @@ class OneFileSystemPlugin(obnamlib.ObnamPlugin):
             self.app.hooks.add_callback('backup-exclude', self.exclude)
 
     def load_mount_points(self):
+        self.mount_points = []
         try:
             with open('/proc/mounts', 'r') as f:
                 self.mount_points = self.parse_proc_mounts(f)
