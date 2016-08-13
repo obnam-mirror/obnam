@@ -27,6 +27,9 @@ class LeafStoreInterface(object):  # pragma: no cover
     def get_leaf(self, leaf_id):
         raise NotImplementedError()
 
+    def flush(self):
+        raise NotImplementedError()
+
 
 class InMemoryLeafStore(LeafStoreInterface):
 
@@ -41,6 +44,9 @@ class InMemoryLeafStore(LeafStoreInterface):
 
     def get_leaf(self, leaf_id):
         return self._leaves.get(leaf_id, None)
+
+    def flush(self):
+        pass
 
 
 class LeafStore(LeafStoreInterface):  # pragma: no cover
@@ -58,3 +64,6 @@ class LeafStore(LeafStoreInterface):  # pragma: no cover
         leaf = obnamlib.CowLeaf()
         leaf.from_dict(self._blob_store.get_blob(leaf_id))
         return leaf
+
+    def flush(self):
+        self._blob_store.flush()

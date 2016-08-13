@@ -37,6 +37,23 @@ class CowTreeTests(unittest.TestCase):
         self.cow.insert(key, value)
         self.assertEqual(self.cow.lookup(key), value)
 
+    def test_inserts_many_keys(self):
+        N = 10
+        self.cow.set_max_leaf_size(N/3)
+
+        keyvalues = [
+            ('key-{}'.format(i), 'value-{}'.format(i))
+            for i in range(N)
+        ]
+
+        # Insert in reverse order in order to exercise all the code
+        # paths in _LeafList.find_leaf_for_key.
+        for key, value in reversed(keyvalues):
+            self.cow.insert(key, value)
+
+        for key, value in keyvalues:
+            self.assertEqual(self.cow.lookup(key), value)
+
     def test_commits_changes_persistently(self):
         key = 'fookey'
         value = 'barvalue'

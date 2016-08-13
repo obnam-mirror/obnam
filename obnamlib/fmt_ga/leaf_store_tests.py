@@ -40,6 +40,9 @@ class LeafStoreTests(object):
     def test_returns_None_if_leaf_is_missing(self):
         self.assertEqual(self.ls.get_leaf(42), None)
 
+    def test_has_flush(self):
+        self.assertEqual(self.ls.flush(), None)
+
 
 class InMemoryLeafStoreTests(unittest.TestCase, LeafStoreTests):
 
