@@ -185,7 +185,9 @@ from .fmt_ga import (
     create_gadirectory_from_dict,
     GATree,
     GAChunkStore,
-    GAChunkIndexes)
+    GAChunkIndexes,
+    InMemoryLeafStore,
+)
 
 
 #

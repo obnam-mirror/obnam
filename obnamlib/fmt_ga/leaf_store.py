@@ -1,4 +1,4 @@
-# Copyright 2015-2016  Lars Wirzenius
+# Copyright 2016  Lars Wirzenius
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,11 +15,26 @@
 #
 # =*= License: GPL-3+ =*=
 
-from .client_list import GAClientList
-from .chunk_store import GAChunkStore
-from .leaf_store import InMemoryLeafStore
-from .indexes import GAChunkIndexes
-from .dirobj import GADirectory, GAImmutableError, create_gadirectory_from_dict
-from .tree import GATree
-from .client import GAClient
-from .format import RepositoryFormatGA, GREEN_ALBATROSS_VERSION
+
+class LeafStoreInterface(object):  # pragma: no cover
+
+    def put_leaf(self, leaf):
+        raise NotImplementedError()
+
+    def get_leaf(self, leaf_id):
+        raise NotImplementedError()
+
+
+class InMemoryLeafStore(LeafStoreInterface):
+
+    def __init__(self):
+        self._leaves = {}
+        self._counter = 0
+
+    def put_leaf(self, leaf):
+        self._counter += 1
+        self._leaves[self._counter] = leaf
+        return self._counter
+
+    def get_leaf(self, leaf_id):
+        return self._leaves.get(leaf_id, None)
