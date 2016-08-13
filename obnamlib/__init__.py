@@ -187,7 +187,9 @@ from .fmt_ga import (
     GAChunkStore,
     GAChunkIndexes,
     InMemoryLeafStore,
+    LeafStore,
     CowLeaf,
+    CowTree,
 )
 
 

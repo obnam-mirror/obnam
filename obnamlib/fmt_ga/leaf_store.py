@@ -16,6 +16,9 @@
 # =*= License: GPL-3+ =*=
 
 
+import obnamlib
+
+
 class LeafStoreInterface(object):  # pragma: no cover
 
     def put_leaf(self, leaf):
@@ -38,3 +41,20 @@ class InMemoryLeafStore(LeafStoreInterface):
 
     def get_leaf(self, leaf_id):
         return self._leaves.get(leaf_id, None)
+
+
+class LeafStore(LeafStoreInterface):  # pragma: no cover
+
+    def __init__(self):
+        self._blob_store = None
+
+    def set_blob_store(self, blob_store):
+        self._blob_store = blob_store
+
+    def put_leaf(self, leaf):
+        return self._blob_store.put_blob(leaf.as_dict())
+
+    def get_leaf(self, leaf_id):
+        leaf = obnamlib.CowLeaf()
+        leaf.from_dict(self._blob_store.get_blob(leaf_id))
+        return leaf

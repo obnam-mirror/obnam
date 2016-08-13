@@ -1,4 +1,4 @@
-# Copyright 2015-2016  Lars Wirzenius
+# Copyright 2016  Lars Wirzenius
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,13 +15,27 @@
 #
 # =*= License: GPL-3+ =*=
 
-from .client_list import GAClientList
-from .chunk_store import GAChunkStore
-from .leaf_store import InMemoryLeafStore, LeafStore
-from .leaf import CowLeaf
-from .cowtree import CowTree
-from .indexes import GAChunkIndexes
-from .dirobj import GADirectory, GAImmutableError, create_gadirectory_from_dict
-from .tree import GATree
-from .client import GAClient
-from .format import RepositoryFormatGA, GREEN_ALBATROSS_VERSION
+
+import obnamlib
+
+
+class CowTree(object):
+
+    def __init__(self):
+        self._store = None
+        self._leaf = obnamlib.CowLeaf()
+
+    def set_leaf_store(self, leaf_store):
+        self._store = leaf_store
+
+    def set_list_node(self, leaf_id):
+        self._leaf = self._store.get_leaf(leaf_id)
+
+    def lookup(self, key):
+        return self._leaf.lookup(key)
+
+    def insert(self, key, value):
+        self._leaf.insert(key, value)
+
+    def commit(self):
+        return self._store.put_leaf(self._leaf)
