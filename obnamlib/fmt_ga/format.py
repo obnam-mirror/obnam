@@ -19,7 +19,7 @@
 import obnamlib
 
 
-GREEN_ALBATROSS_VERSION = 'green-albatross-20160718'
+GREEN_ALBATROSS_VERSION = 'green-albatross-20160813'
 
 
 class RepositoryFormatGA(obnamlib.RepositoryDelegator):
