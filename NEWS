@@ -22,6 +22,11 @@ Version 1.20, not yet released
   backwards incompatible changes that mean existing repositories no
   longer work. Sorry, but that's what experimental means.
 
+* A green-albatross change is that the "chunk index" data structure is
+  no longer a single blob, and instead it's broken down into smaller
+  objects. This avoids keeping all of the chunk indexes in memory at
+  once, which should reduce memory use.
+
 * Remi Rampin started updating and continuing the French translation
   of the Obnam manual.
 
