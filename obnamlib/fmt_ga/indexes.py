@@ -16,8 +16,6 @@
 # =*= License: GPL-3+ =*=
 
 
-import errno
-import logging
 import os
 
 import obnamlib
@@ -52,15 +50,24 @@ class GAChunkIndexes(object):
         return self._dirname
 
     def clear(self):
-        self._data = {}
         self._data_is_loaded = False
+        self._by_chunk_id_tree = None
+        self._by_checksum_tree = None
+        self._used_by_tree = None
 
     def commit(self):
         self._load_data()
         self._save_data()
 
     def _save_data(self):
-        blob = obnamlib.serialise_object(self._data)
+        root = {
+            'checksum_algorithm': self._checksum_name,
+            'by_chunk_id': self._by_chunk_id_tree.commit(),
+            'by_checksum': self._by_checksum_tree.commit(),
+            'used_by': self._used_by_tree.commit(),
+        }
+
+        blob = obnamlib.serialise_object(root)
 
         bag_store = obnamlib.BagStore()
         bag_store.set_location(self._fs, self.get_dirname())
@@ -78,25 +85,35 @@ class GAChunkIndexes(object):
             blob_store.set_bag_store(bag_store)
             blob = blob_store.get_well_known_blob(self._well_known_blob)
 
-            if blob is None:
-                self._data = {
-                    'by_chunk_id': {
-                    },
-                    'by_checksum': {
-                        self._checksum_name: {},
-                    },
-                    'used_by': {
-                    },
-                }
-            else:
-                self._data = obnamlib.deserialise_object(blob)
-                assert self._data is not None
+            leaf_store = obnamlib.LeafStore()
+            leaf_store.set_blob_store(blob_store)
 
-                keys = self._data['by_checksum'].keys()
-                assert len(keys) == 1
-                self._checksum_name = keys[0]
+            if blob is None:
+                self._by_chunk_id_tree = self._empty_cowtree(leaf_store)
+                self._by_checksum_tree = self._empty_cowtree(leaf_store)
+                self._used_by_tree = self._empty_cowtree(leaf_store)
+            else:
+                data = obnamlib.deserialise_object(blob)
+                self._checksum_name = data['checksum_algorithm']
+
+                self._by_chunk_id_tree = self._load_cowtree(
+                    leaf_store, data['by_chunk_id'])
+                self._by_checksum_tree = self._load_cowtree(
+                    leaf_store, data['by_checksum'])
+                self._used_by_tree = self._load_cowtree(
+                    leaf_store, data['used_by'])
 
             self._data_is_loaded = True
+
+    def _empty_cowtree(self, leaf_store):
+        cow = obnamlib.CowTree()
+        cow.set_leaf_store(leaf_store)
+        return cow
+
+    def _load_cowtree(self, leaf_store, list_id):
+        cow = self._empty_cowtree(leaf_store)
+        cow.set_list_node(list_id)
+        return cow
 
     def _get_filename(self):
         return os.path.join(self.get_dirname(), 'data.dat')
@@ -109,27 +126,25 @@ class GAChunkIndexes(object):
     def put_chunk_into_indexes(self, chunk_id, token, client_id):
         self._load_data()
 
-        by_chunk_id = self._data['by_chunk_id']
-        by_chunk_id[chunk_id] = token
+        self._by_chunk_id_tree.insert(chunk_id, token)
 
-        by_checksum = self._data['by_checksum'][self._checksum_name]
-        chunk_ids = by_checksum.get(token, [])
-        if chunk_id not in chunk_ids:
+        chunk_ids = self._by_checksum_tree.lookup(token)
+        if chunk_ids is None:
+            chunk_ids = [chunk_id]
+        elif chunk_id not in chunk_ids:
             chunk_ids.append(chunk_id)
-            by_checksum[token] = chunk_ids
+        self._by_checksum_tree.insert(token, chunk_ids)
 
-        used_by = self._data['used_by']
-        client_ids = used_by.get(chunk_id, [])
-        if client_id not in client_ids:
+        client_ids = self._used_by_tree.lookup(chunk_id)
+        if client_ids is None:
+            client_ids = [client_id]
+        elif client_id not in client_ids:
             client_ids.append(client_id)
-            used_by[chunk_id] = client_ids
+        self._used_by_tree.insert(chunk_id, client_ids)
 
     def find_chunk_ids_by_token(self, token):
         self._load_data()
-
-        by_checksum = self._data['by_checksum'][self._checksum_name]
-        result = by_checksum.get(token, [])
-
+        result = self._by_checksum_tree.lookup(token)
         if not result:
             raise obnamlib.RepositoryChunkContentNotInIndexes()
         return result
@@ -148,81 +163,37 @@ class GAChunkIndexes(object):
 
     def _remove_used_by(self, chunk_id, client_id):
         still_used = False
-        used_by = self._data['used_by']
-        client_ids = used_by.get(chunk_id, [])
-        if client_id in client_ids:
+        client_ids = self._used_by_tree.lookup(chunk_id)
+        if client_ids is not None and client_id in client_ids:
             client_ids.remove(client_id)
+            self._used_by_tree.insert(chunk_id, client_ids)
             if client_ids:
                 still_used = True
             else:
-                # We leave an empty here, and use that in
+                # We leave an empty list, and use that in
                 # remove_unused_chunks to indicate an unused chunk.
                 pass
         return still_used
 
     def _remove_chunk_by_id(self, chunk_id):
-        by_chunk_id = self._data['by_chunk_id']
-        token = by_chunk_id.get(chunk_id, None)
+        token = self._by_chunk_id_tree.lookup(chunk_id)
         if token is not None:
-            del by_chunk_id[chunk_id]
+            # FIXME: Should we have CowTree.delete(key)?
+            self._by_chunk_id_tree.insert(chunk_id, None)
         return token
 
     def _remove_chunk_by_checksum(self, chunk_id, token):
-        by_checksum = self._data['by_checksum'][self._checksum_name]
-        chunk_ids = by_checksum.get(token, [])
-        if chunk_id in chunk_ids:
+        chunk_ids = self._by_checksum_tree.lookup(token)
+        if chunk_ids is not None and chunk_id in chunk_ids:
             chunk_ids.remove(chunk_id)
-            if not chunk_ids:
-                del by_checksum[token]
+            self._by_checksum_tree.insert(token, chunk_ids)
 
     def _remove_all_used_by(self, chunk_id):
-        used_by = self._data['used_by']
-        if chunk_id in used_by:
-            del used_by[chunk_id]
+        self._used_by_tree.insert(chunk_id, None)
 
     def remove_unused_chunks(self, chunk_store):
-
-        def find_ids_of_unused_chunks(used_by):
-            return set(x for x in used_by if not used_by[x])
-
-        def remove_from_used_by(used_by, chunk_ids):
-            for chunk_id in chunk_ids:
-                del used_by[chunk_id]
-
-        def get_bag_ids(chunk_ids):
-            return set(
-                obnamlib.parse_object_id(chunk_id)[0]
-                for chunk_id in chunks_to_remove)
-
-        def get_chunk_ids_in_bag(bag_id):
-            bag = chunk_store._bag_store.get_bag(bag_id)
-            return [
-                obnamlib.make_object_id(bag_id, i)
-                for i in range(len(bag))
-            ]
-
-        def remove_bag_if_unused(used_by, bag_id):
-            chunk_ids = get_chunk_ids_in_bag(bag_id)
-            if not any(chunk_id in used_by for chunk_id in chunk_ids):
-                chunk_store._bag_store.remove_bag(bag_id)
-
-        self._load_data()
-        used_by = self._data['used_by']
-        chunks_to_remove = find_ids_of_unused_chunks(used_by)
-        remove_from_used_by(used_by, chunks_to_remove)
-        for bag_id in get_bag_ids(chunks_to_remove):
-            try:
-                remove_bag_if_unused(used_by, bag_id)
-            except EnvironmentError as e:
-                if e.errno == errno.ENOENT:
-                    # The bag's missing. We log, but otherwise
-                    # ignore that. Don't want to crash a forget
-                    # operation just because a chunk that was
-                    # meant to be removed is already removed.
-                    logging.warning(
-                        'Tried to delete bag that was missing: %s', bag_id)
-                else:
-                    raise
+        # FIXME: This requires having a way to list keys in a CowTree.
+        pass
 
     def validate_chunk_content(self, chunk_id):
         return None
