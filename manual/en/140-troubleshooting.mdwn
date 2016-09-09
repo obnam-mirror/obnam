@@ -40,6 +40,12 @@ easier to figure out what the problem is.
   list. This is a publicly archived mailing list where various
   people help others use Obnam.
 
+  If you respond to messages on `obnam-support`, **always** keep the
+  list in the cc list. This means others will see the response, and
+  there's a chance that they can help you better than the particular
+  person you're responding to. Also, the archived discussion may be
+  helpful to later readers, perhaps years afterwards.
+
 * What is the problem? What did you try to achieve? What actually
   happened?
 
