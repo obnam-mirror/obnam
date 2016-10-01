@@ -183,9 +183,8 @@ manifest()
 
 get_fingerprint()
 {
-    gpg --fingerprint "$1" |
-    sed -n '/^ *Key fingerprint = /s///p' |
-    sed 's/ *//g'
+    gpg --fingerprint --with-colons "$1" |
+        awk -F: '/^fpr:/ { print $10; exit }'
 }
 
 

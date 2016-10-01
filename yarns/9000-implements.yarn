@@ -511,8 +511,16 @@ Forget a key from the user's keyring.
 
     IMPLEMENTS WHEN user (\S+) no longer has key "(.+)"
     export GNUPGHOME="$DATADIR/$MATCH_1.gnupg"
+    ls -la "$GNUPGHOME"
+    echo fingerprints
+    gpg --fingerprint "$MATCH_2"
+    echo with colons
+    gpg --fingerprint --with-colons "$MATCH_2"
+    echo just fingeprint
+    gpg --fingerprint --with-colons "$MATCH_2" |
+        awk -F: '{ print } /^fpr:/ { print $10; exit }'
     fingerprint="$(get_fingerprint "$MATCH_2")"
-    gpg --batch --delete-secret-key "$fingerprint"
+    gpg --batch --yes --delete-secret-key "$fingerprint"
 
 
 Lock management
