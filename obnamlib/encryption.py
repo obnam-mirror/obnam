@@ -1,4 +1,4 @@
-# Copyright 2011-2015  Lars Wirzenius
+# Copyright 2011-2016  Lars Wirzenius
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,7 +30,8 @@ class EncryptionError(obnamlib.ObnamError):
 
 class GpgError(EncryptionError):
 
-    msg = 'gpg failed with exit code {returncode}:\n{stderr}'
+    msg = ('gpg failed with exit code {returncode}:\n'
+           'Command: {command}\n{stderr}')
 
 
 def generate_symmetric_key(numbits, filename='/dev/random'):
@@ -129,7 +130,8 @@ def _gpg(args, stdin='', gpghome=None):
 
     # Return output data, or deal with errors.
     if p.returncode:  # pragma: no cover
-        raise GpgError(returncode=p.returncode, stderr=err)
+        command = ' '.join(argv)
+        raise GpgError(command=command, returncode=p.returncode, stderr=err)
 
     return out
 

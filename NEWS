@@ -49,6 +49,9 @@ Minor changes:
   starts, however. Also, `/proc/mounts` must be an accurate list of
   mount points.
 
+* Lars Wirzenius added the gpg command line to the error message about
+  gpg failing.
+
 Bug fixes:
 
 * The manual and manual page used to claim you could break only the
