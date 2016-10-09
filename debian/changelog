@@ -1,4 +1,4 @@
-obnam (1.19.1+git-1) UNRELEASED; urgency=medium
+obnam (1.19.2+git-1) UNRELEASED; urgency=medium
 
   * New upstream version.
   * Require Python 2.7.

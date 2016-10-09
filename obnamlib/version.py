@@ -15,5 +15,5 @@
 #
 # =*= License: GPL-3+ =*=
 
-__version__ = '1.19.1+git'
-__version_info__ = (1, 19, 1, '+git')
+__version__ = '1.19.2+git'
+__version_info__ = (1, 19, 2, '+git')
