@@ -3,9 +3,9 @@ Maintainer: Lars Wirzenius <liw@liw.fi>
 Uploaders: Gaudenz Steinlin <gaudenz@debian.org>
 Section: python
 Priority: optional
-Standards-Version: 3.9.5
-Build-Depends: debhelper (>= 7.3.8),
-    python-all-dev (>= 2.6.3~3),
+Standards-Version: 3.9.8
+Build-Depends: debhelper (>= 9),
+    python-all-dev (>= 2.7),
     python-yaml,
     python-coverage-test-runner (>= 1.8~),
     python-larch (>= 1.20131130~),
@@ -22,7 +22,7 @@ Build-Depends: debhelper (>= 7.3.8),
     git,
     pep8
 Homepage: http://obnam.org/
-X-Python-Version: >= 2.6
+X-Python-Version: >= 2.7
 
 Package: obnam
 Provides: python-obnam
