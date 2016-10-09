@@ -17,7 +17,7 @@
 import cliapp
 
 
-from .version import __version__
+from .version import __version__, __version_info__
 from .structurederror import StructuredError
 from .structurederror_finder import find_structured_errors
 from .obnamerror import ObnamError
