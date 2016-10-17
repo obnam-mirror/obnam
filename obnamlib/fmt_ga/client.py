@@ -75,7 +75,7 @@ class GAClient(object):
         return self._dirname
 
     def flush(self):
-        self._save_file_metadata()
+        pass
 
     def flush_ro(self):
         for gen in self._generations:
