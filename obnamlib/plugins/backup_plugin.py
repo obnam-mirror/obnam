@@ -387,8 +387,15 @@ class BackupPlugin(obnamlib.ObnamPlugin):
 
         self.root_metadata = self.fs.lstat(absroot)
 
+        num_dirs = 0
+        # The following is a very approximate guess, but we have no
+        # way of being exact.
+        dir_entry_size = 1000
+        flush_threshold = obnamlib.DEFAULT_DIR_BAG_BYTES / dir_entry_size
+
         for pathname, metadata in self.find_files(absroot):
             logging.info('Backing up %s', pathname)
+
             if not self.pretend:
                 existed = self.repo.file_exists(self.new_generation, pathname)
             try:
@@ -407,12 +414,16 @@ class BackupPlugin(obnamlib.ObnamPlugin):
                     raise
 
             if metadata.isdir() and not self.pretend:
-                self.repo.flush_client(self.client_name)
-                self.app.dump_memory_profile('after flushing client')
+                num_dirs += 1
+                if num_dirs >= flush_threshold:
+                    self.repo.flush_client(self.client_name)
+                    self.app.dump_memory_profile('after flushing client')
+                    num_dirs = 0
 
             if self.checkpoint_manager.time_for_checkpoint():
                 self.make_checkpoint()
                 self.progress.what(pathname)
+                num_dirs = 0
 
         self.backup_parents('.')
 
