@@ -387,13 +387,11 @@ class BackupPlugin(obnamlib.ObnamPlugin):
 
         self.root_metadata = self.fs.lstat(absroot)
 
-        num_files = 0
+        num_dirs = 0
         flush_threshold = 1000
 
         for pathname, metadata in self.find_files(absroot):
             logging.info('Backing up %s', pathname)
-
-            num_files += 1
 
             if not self.pretend:
                 existed = self.repo.file_exists(self.new_generation, pathname)
@@ -412,10 +410,12 @@ class BackupPlugin(obnamlib.ObnamPlugin):
                 if e.errno in (errno.ENOSPC, errno.EPIPE):
                     raise
 
-            if metadata.isdir() and not self.pretend and num_files >= flush_threshold:
-                self.repo.flush_client(self.client_name)
-                self.app.dump_memory_profile('after flushing client')
-                num_files = 0
+            if metadata.isdir() and not self.pretend:
+                num_dirs += 1
+                if num_dirs >= flush_threshold:
+                    self.repo.flush_client(self.client_name)
+                    self.app.dump_memory_profile('after flushing client')
+                    num_files = 0
 
             if self.checkpoint_manager.time_for_checkpoint():
                 self.make_checkpoint()
