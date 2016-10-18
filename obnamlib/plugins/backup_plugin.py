@@ -390,7 +390,7 @@ class BackupPlugin(obnamlib.ObnamPlugin):
         num_dirs = 0
         # The following is a very approximate guess, but we have no
         # way of being exact.
-        dir_enry_size = 1000
+        dir_entry_size = 1000
         flush_threshold = obnamlib.DEFAULT_DIR_BAG_BYTES / dir_entry_size
 
         for pathname, metadata in self.find_files(absroot):
