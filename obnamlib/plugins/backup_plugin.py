@@ -420,6 +420,7 @@ class BackupPlugin(obnamlib.ObnamPlugin):
             if self.checkpoint_manager.time_for_checkpoint():
                 self.make_checkpoint()
                 self.progress.what(pathname)
+                num_dirs = 0
 
         self.backup_parents('.')
 
