@@ -415,7 +415,7 @@ class BackupPlugin(obnamlib.ObnamPlugin):
                 if num_dirs >= flush_threshold:
                     self.repo.flush_client(self.client_name)
                     self.app.dump_memory_profile('after flushing client')
-                    num_files = 0
+                    num_dirs = 0
 
             if self.checkpoint_manager.time_for_checkpoint():
                 self.make_checkpoint()
