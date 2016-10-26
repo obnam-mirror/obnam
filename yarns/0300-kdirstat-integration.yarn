@@ -15,7 +15,7 @@ file.
     WHEN user U backs up directory L to repository R
     AND user U creates a kdirstat cache file C of repository R
     THEN first line of C matches [kdirstat 4.0 cache file]
-    AND for each file in directory L a line in the kdircache C matches it
+    AND for each entry in directory L a line in the kdircache C matches it
 
 Now a backup containing some interesting objects
 
@@ -25,7 +25,7 @@ Now a backup containing some interesting objects
     WHEN user U backs up directory L to repository R
     AND user U creates a kdirstat cache file C of repository R
     THEN first line of C matches [kdirstat 4.0 cache file]
-    AND for each file in directory L a line in the kdircache C matches it
+    AND for each entry in directory L a line in the kdircache C matches it
 
 Validating the cache file
 -------------------------

@@ -303,7 +303,7 @@ class ShowPlugin(obnamlib.ObnamPlugin):
         elif stat.S_ISCHR(mode):
             mode_str = "CharDev\t"
         elif stat.S_ISFIFO(mode):
-            mode_str = "FIFO"
+            mode_str = "FIFO\t"
         elif stat.S_ISSOCK(mode):
             mode_str = "Socket\t"
         else:

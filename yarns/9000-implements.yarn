@@ -773,7 +773,10 @@ Check that the cache mentions each file in the repository. Since grep
 -E cannot specifically match a tab we check only for one character of
 whitespace.
 
-    IMPLEMENTS THEN for each file in directory (\S+) a line in the kdircache (\S+) matches it
+    IMPLEMENTS THEN for each entry in directory (\S+) a line in the kdircache (\S+) matches it
     find "$DATADIR/$MATCH_1" -type f | while read f ; do \
         grep -E -e "^F[[:space:]]$f" "$DATADIR/$MATCH_2" || exit 1; \
+    done
+    find "$DATADIR/$MATCH_1" -type p | while read p ; do \
+        grep -E -e "^FIFO[[:space:]]$p" "$DATADIR/$MATCH_2" || exit 1; \
     done
