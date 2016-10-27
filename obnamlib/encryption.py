@@ -180,7 +180,7 @@ class Keyring(object):
 ''', gpghome=self._gpghome)
 
     def _cleanup(self):
-        shutil.rmtree(self._gpghome)
+        shutil.rmtree(self._gpghome, ignore_errors=True)
         self._gpghome = None
 
     @property

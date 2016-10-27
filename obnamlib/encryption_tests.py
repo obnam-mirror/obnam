@@ -41,7 +41,7 @@ class SymmetricEncryptionTests(unittest.TestCase):
         self.gpghome = tempfile.mkdtemp()
 
     def tearDown(self):
-        shutil.rmtree(self.gpghome)
+        shutil.rmtree(self.gpghome, ignore_errors=True)
 
     def test_generates_key_of_correct_length(self):
         numbits = 16
@@ -112,7 +112,7 @@ class GetPublicKeyTests(unittest.TestCase):
         self.keyid = '1B321347'
 
     def tearDown(self):
-        shutil.rmtree(self.dirname)
+        shutil.rmtree(self.dirname, ignore_errors=True)
 
     def test_exports_key(self):
         key = obnamlib.get_public_key(self.keyid, gpghome=self.gpghome)
@@ -189,7 +189,7 @@ class PublicKeyEncryptionTests(unittest.TestCase):
         self.keyid = '1B321347'
 
     def tearDown(self):
-        shutil.rmtree(self.dirname)
+        shutil.rmtree(self.dirname, ignore_errors=True)
 
     def test_roundtrip_works(self):
         cleartext = 'hello, world'
