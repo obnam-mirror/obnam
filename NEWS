@@ -69,6 +69,9 @@ Bug fixes:
   error classes that only exist to make the exception hierarchy
   neater, such as `EncryptionError`. Bug reported by Rik Theys.
 
+* Ian Cambell fixed a bug in `obnam kdirstat` and its handling of FIFO
+  sockets.
+
 Version 1.19.1, released 2016-01-30
 ---------------------------------
 
