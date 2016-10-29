@@ -27,7 +27,7 @@ class ListErrorsPlugin(obnamlib.ObnamPlugin):
 
     def list_errors(self, args):
         errors = obnamlib.find_structured_errors(obnamlib, self.app.pluginmgr)
-        errors  = [e for e in errors if e.msg]
+        errors = [e for e in errors if e.msg]
         f = self.app.output
 
         f.write('## By error code\n\n')
