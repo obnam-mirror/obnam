@@ -1,4 +1,4 @@
-# Copyright (C) 2015  Lars Wirzenius
+# Copyright (C) 2015-2016  Lars Wirzenius
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ class ListErrorsPlugin(obnamlib.ObnamPlugin):
 
     def list_errors(self, args):
         errors = obnamlib.find_structured_errors(obnamlib, self.app.pluginmgr)
+        errors  = [e for e in errors if e.msg]
         f = self.app.output
 
         f.write('## By error code\n\n')

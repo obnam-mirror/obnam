@@ -65,6 +65,10 @@ Bug fixes:
 * Lars Wirzenius fixed `obnam restore` to require a target set with
   `--to`. Jonathan Dowland reported the problem.
 
+* Lars Wirzeniud fixed `obnam list-errors` so that it doesn't crash on
+  error classes that only exist to make the exception hierarchy
+  neater, such as `EncryptionError`. Bug reported by Rik Theys.
+
 Version 1.19.1, released 2016-01-30
 ---------------------------------
 
