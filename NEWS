@@ -4,15 +4,15 @@ Obnam NEWS
 This file summarizes changes between releases of Obnam.
 
 NOTE: Obnam has an **EXPERIMENTAL** repository format under
-development, called `green-albatross-YYYYMMDD`. It is **NOT** meant
+development, called `green-albatross-20160813`. It is **NOT** meant
 for real use. It is likely to change in incompatible ways without
-warning. Do not use it unless you're willing to lose your backup.
+warning. DO NOT USE it unless you're willing to lose your backup.
 
 Version 1.20, not yet released
 ---------------------------------
 
 * The format name for `green-albatross` is renamed to
-  `green-albatross-20160718` and will henceforth be renamed every time
+  `green-albatross-20160813` and will henceforth be renamed every time
   there's a change, to avoid confusing Lars because of backwards
   incompatibilities. When it reaches stability and the on-disk format
   is frozen, it'll be renamed back to a date-less version.
@@ -65,7 +65,7 @@ Bug fixes:
 * Lars Wirzenius fixed `obnam restore` to require a target set with
   `--to`. Jonathan Dowland reported the problem.
 
-* Lars Wirzeniud fixed `obnam list-errors` so that it doesn't crash on
+* Lars Wirzenius fixed `obnam list-errors` so that it doesn't crash on
   error classes that only exist to make the exception hierarchy
   neater, such as `EncryptionError`. Bug reported by Rik Theys.
 
