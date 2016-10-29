@@ -1,3 +1,9 @@
+obnam (1.20+git-1) UNRELEASED; urgency=medium
+
+  * New upstream version.
+
+ -- Lars Wirzenius <liw@liw.fi>  Sat, 29 Oct 2016 12:25:38 +0300
+
 obnam (1.20-1) unstable; urgency=medium
 
   * New upstream version.
