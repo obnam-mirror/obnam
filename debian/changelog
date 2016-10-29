@@ -1,6 +1,8 @@
 obnam (1.19.2+git-1) UNRELEASED; urgency=medium
 
   * New upstream version.
+    - list-errors produces python traceback (Closes: #837770)
+
   * Require Python 2.7.
 
  -- Lars Wirzenius <liw@liw.fi>  Sun, 09 Oct 2016 16:44:10 +0300
