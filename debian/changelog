@@ -1,4 +1,4 @@
-obnam (1.19.2+git-1) UNRELEASED; urgency=medium
+obnam (1.20-1) unstable; urgency=medium
 
   * New upstream version.
     - list-errors produces python traceback (Closes: #837770)
@@ -6,7 +6,7 @@ obnam (1.19.2+git-1) UNRELEASED; urgency=medium
       2: No such file or directory (Closes: #841295)
   * Require Python 2.7.
 
- -- Lars Wirzenius <liw@liw.fi>  Sun, 09 Oct 2016 16:44:10 +0300
+ -- Lars Wirzenius <liw@liw.fi>  Sat, 29 Oct 2016 12:25:37 +0300
 
 obnam (1.19.1-1) unstable; urgency=medium
 
