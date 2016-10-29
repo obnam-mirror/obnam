@@ -315,6 +315,7 @@ class Check(Command):
             r'^COPYING$',
             r'^CC-BY-SA-4\.0\.txt$',
             r'^\.gitignore$',
+            r'^obnamlib/version\.py$',
             ]
 
         pats = [re.compile(x) for x in exclude]
