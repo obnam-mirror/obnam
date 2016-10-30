@@ -1,10 +1,10 @@
-obnam (1.20+git-1) UNRELEASED; urgency=medium
+obnam (1.20.1-1) unstable; urgency=medium
 
   * New upstream version.
   * Add build and runtime dependency on gpg, since gpg doesn't seem to
     be effectively build-essential anymore in unstable.
 
- -- Lars Wirzenius <liw@liw.fi>  Sat, 29 Oct 2016 12:25:38 +0300
+ -- Lars Wirzenius <liw@liw.fi>  Sun, 30 Oct 2016 09:22:19 +0200
 
 obnam (1.20-1) unstable; urgency=medium
 
