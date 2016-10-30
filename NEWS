@@ -11,6 +11,7 @@ warning. DO NOT USE it unless you're willing to lose your backup.
 Version 1.20+git, not yet released
 ----------------------------------
 
+* Debian packaging change: add dependency on gpg.
 
 Version 1.20, released 2016-10-29
 ---------------------------------

@@ -20,6 +20,7 @@ Build-Depends: debhelper (>= 9),
     python-fuse,
     pandoc,
     git,
+    gpg,
     pep8
 Homepage: http://obnam.org/
 X-Python-Version: >= 2.7
@@ -28,6 +29,7 @@ Package: obnam
 Provides: python-obnam
 Architecture: linux-any
 Depends: ${shlibs:Depends}, ${python:Depends}, ${misc:Depends},
+    gpg,
     python-larch (>= 1.20131130~),
     python-ttystatus (>= 0.23~),
     python-paramiko,
