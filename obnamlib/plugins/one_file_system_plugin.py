@@ -57,6 +57,11 @@ class OneFileSystemPlugin(obnamlib.ObnamPlugin):
         pathname = kwargs['pathname']
         exclude = kwargs['exclude']
 
-        if st.st_dev != root_metadata.st_dev or pathname in self.mount_points:
+        # FIXME: We should check for mount points (bind mounts) here.
+        # We used to do that but it broke other things, and as the
+        # Debian stretch release freezing is going on, backing out of
+        # the bind mount checking is a safer bet than trying to fix
+        # it. Needs to be fixed later. I suck. --liw
+        if st.st_dev != root_metadata.st_dev:
             logging.debug('Excluding (one-file-system): %s', pathname)
             exclude[0] = True

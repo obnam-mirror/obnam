@@ -1,6 +1,7 @@
 obnam (1.20.3+git-1) UNRELEASED; urgency=medium
 
   * New upstream version.
+    - Fix --one-filesystem bug (Closes: #849596)
 
  -- Lars Wirzenius <liw@liw.fi>  Thu, 15 Dec 2016 11:19:43 +0100
 
