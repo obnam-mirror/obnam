@@ -11,6 +11,9 @@ warning. DO NOT USE it unless you're willing to lose your backup.
 Version 1.21+git, not yet released
 ----------------------------------
 
+* Lars Wirzenius made Obnam log the full text of an Obnam
+  exception/error message with more than one line. In particular this
+  applies to encryption error messages, which now log the gpg output.
 
 Version 1.21, released 2016-12-29
 ------------------------------------
