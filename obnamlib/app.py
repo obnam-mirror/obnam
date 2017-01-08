@@ -234,9 +234,13 @@ class App(cliapp.Application):
             sys.stderr.write('ERROR: %s\n' % str(e))
             sys.exit(1)
         except obnamlib.StructuredError as e:
-            logging.critical(str(e), exc_info=True)
+            logging.critical(self._indent_multiline(e.formatted()), exc_info=True)
             sys.stderr.write('ERROR: %s\n' % e.formatted())
             sys.exit(1)
+
+    def _indent_multiline(self, s):
+        lines = s.splitlines()
+        return ''.join([lines[0] + '\n'] + ['    {}\n'.format(line) for line in lines[1:]])
 
     def setup_ttystatus(self):
         self.ts = ttystatus.TerminalStatus(period=0.1)

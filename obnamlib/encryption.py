@@ -30,7 +30,7 @@ class EncryptionError(obnamlib.ObnamError):
 
 class GpgError(EncryptionError):
 
-    msg = ('gpg failed with exit code {returncode}:\n'
+    msg = ('gpg failed with exit code {returncode}\n'
            'Command: {command}\n{stderr}')
 
 
