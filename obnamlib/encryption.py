@@ -1,4 +1,4 @@
-# Copyright 2011-2016  Lars Wirzenius
+# Copyright 2011-2017  Lars Wirzenius
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
