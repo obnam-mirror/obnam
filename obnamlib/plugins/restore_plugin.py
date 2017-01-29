@@ -33,6 +33,12 @@ class NoToError(obnamlib.ObnamError):
     msg = 'The restore command wants a target set with --to'
 
 
+class RelativePathError(obnamlib.ObnamError):
+
+    msg = ("Restore of {filename} requested, but it is not an absolute path "
+           "(doesn't start with /)")
+
+
 class RestoreErrors(obnamlib.ObnamError):
 
     msg = '''There were errors when restoring
@@ -137,6 +143,10 @@ class RestorePlugin(obnamlib.ObnamPlugin):
         logging.debug('restoring to %s', self.app.settings['to'])
 
         logging.debug('restoring what: %s', repr(args))
+        if args:
+            for arg in args:
+                if not os.path.isabs(arg):
+                    raise RelativePathError(filename=arg)
         if not args:
             logging.debug('no args given, so restoring everything')
             args = ['/']
