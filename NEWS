@@ -15,6 +15,9 @@ Version 1.21+git, not yet released
   exception/error message with more than one line. In particular this
   applies to encryption error messages, which now log the gpg output.
 
+* Lars Wirzenius made `obnam restore` require absolute paths for files
+  to be restored.
+
 Version 1.21, released 2016-12-29
 ------------------------------------
 
