@@ -90,6 +90,10 @@ restored files. If you do want replace your live data with restored
 files, you should restore to a temporary location first, and then move
 the files to where you want them to be.
 
+The file or directory you want to restore must be specified using an
+absolute path, i.e., starting from / and not relative to the current
+directory.
+
 An actual example of a restoration
 ----------------------------------
 
