@@ -314,9 +314,6 @@ class ShowPlugin(obnamlib.ObnamPlugin):
         enc_filename = enc_filename.replace(" ", "%20")
         enc_filename = enc_filename.replace("\t", "%09")
 
-        if filename == "/":
-            return
-
         self.app.output.write(
             "%s%s\t%d\t%#x\n" %
             (mode_str, enc_filename, size, mtime_sec))
