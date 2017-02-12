@@ -86,11 +86,14 @@ class ForgetPlugin(obnamlib.ObnamPlugin):
             removeids = self.choose_genids_to_remove_using_keep_policy(genlist)
         else:
             removeids = []
+        self.app.dump_memory_profile('after choosing genids to remove')
 
         self.app.ts['gens'] = removeids
         for genid in removeids:
             self.app.ts['gen'] = genid
-            for unused_chunk_id in self.remove(genid):
+            chunk_ids = self.remove(genid)
+            self.app.dump_memory_profile('after marking gen for removal (about to remove chunks)')
+            for unused_chunk_id in chunk_ids:
                 self.repo.remove_chunk_from_indexes(
                     unused_chunk_id, client_name)
             self.repo.commit_client(client_name)
