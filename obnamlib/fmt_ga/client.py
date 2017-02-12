@@ -230,28 +230,17 @@ class GAClient(object):
         })
         self._dumper = dumper
 
-        chunks_in_removed = self.get_generation_chunk_ids(gen_number)
+        chunks_to_remove = self.get_generation_chunk_ids(gen_number)
         dumper.dump_memory_profile('after getting chunks in removed gen')
 
-        chunks_remaining = self._get_chunk_ids_used_by_generations(remaining)
-        dumper.dump_memory_profile(
-            'after getting chunks in remaining generations')
-
-        unused_chunks = set(chunks_in_removed).difference(chunks_remaining)
-        dumper.dump_memory_profile(
-            'after getting computing set of chunks to remove')
+        for chunk_id in self._generate_chunk_ids_in_generations(remaining):
+            if chunk_id in chunks_to_remove:
+                chunks_to_remove.remove(chunk_id)
+        dumper.dump_memory_profile('after computing chunk uniq to removed gen')
 
         self._generations.set_generations(remaining)
 
-        return list(unused_chunks)
-
-    def _get_chunk_ids_used_by_generations(self, generations):
-        chunk_ids = set()
-        for generation in generations:
-            gen_number = generation.get_number()
-            chunk_ids = chunk_ids.union(
-                set(self.get_generation_chunk_ids(gen_number)))
-        return chunk_ids
+        return list(chunks_to_remove)
 
     def get_generation_key(self, gen_number, key):
         self._load_data()
@@ -418,6 +407,13 @@ class GAClient(object):
         dump('after constructing result')
 
         return result
+
+    def _generate_chunk_ids_in_generations(self, generations):
+        for generation in generations:
+            gen_number = generation.get_number()
+            chunk_ids = self.get_generation_chunk_ids(gen_number)
+            for chunk_id in chunk_ids:
+                yield chunk_id
 
     def get_file_children(self, gen_number, filename):
         self._load_data()
