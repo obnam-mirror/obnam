@@ -230,7 +230,7 @@ class GAClient(object):
         })
         self._dumper = dumper
 
-        chunks_to_remove = self.get_generation_chunk_ids(gen_number)
+        chunks_to_remove = set(self._generate_generation_chunk_ids(gen_number))
         dumper.dump_memory_profile('after getting chunks in removed gen')
 
         for chunk_id in self._generate_chunk_ids_in_generations(remaining):
@@ -377,6 +377,9 @@ class GAClient(object):
                 filename=filename)
 
     def get_generation_chunk_ids(self, gen_number):
+        return list(self._generate_generation_chunk_ids(gen_number))
+
+    def _generate_generation_chunk_ids(self, gen_number):
         if hasattr(self, '_dumper'):
             dump = self._dumper.dump_memory_profile
         else:
@@ -393,26 +396,21 @@ class GAClient(object):
         metadata = generation.get_file_metadata()
         dump('after getting file metadata for generation')
 
-        union = set()
         n = 0
         for filename in metadata:
             n += 1
             if (n % 1000) == 0:
                 dump('gen has at least {} files'.format(n))
-            union = union.union(set(metadata.get_file_chunk_ids(filename)))
-        dump('after building union of sets')
+            chunk_ids = metadata.get_file_chunk_ids(filename)
+            for chunk_id in chunk_ids:
+                yield chunk_id
+        dump('after yielding all chunk ids')
         dump('gen has {} files'.format(n))
-
-        result = list(union)
-        dump('after constructing result')
-
-        return result
 
     def _generate_chunk_ids_in_generations(self, generations):
         for generation in generations:
             gen_number = generation.get_number()
-            chunk_ids = self.get_generation_chunk_ids(gen_number)
-            for chunk_id in chunk_ids:
+            for chunk_id in self._generate_generation_chunk_ids(gen_number):
                 yield chunk_id
 
     def get_file_children(self, gen_number, filename):
