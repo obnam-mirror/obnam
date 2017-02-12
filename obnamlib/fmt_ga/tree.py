@@ -159,12 +159,20 @@ class DirectoryObjectCache(object):
 
     def __init__(self):
         self.clear()
+        self._max_objs = 10**5
+
+    def _clear_immutable(self):  # pragma: no cover
+        if len(self._objs) >= self._max_objs:
+            for pathname, dirobj in self._objs.items():
+                if not dirobj.is_mutable():
+                    del self._objs[pathname]
 
     def clear(self):
         self._objs = {}
 
     def set(self, pathname, dir_obj):
         self._objs[pathname] = dir_obj
+        self._clear_immutable()
 
     def get(self, pathname):
         return self._objs.get(pathname)
