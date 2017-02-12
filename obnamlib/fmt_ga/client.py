@@ -394,23 +394,24 @@ class GAClient(object):
             def dump(msg):
                 return None
         dump('before getting chunk ids used by genaration')
+
         self._load_data()
         dump('after loading data')
+
         generation = self._lookup_generation_by_gen_number(gen_number)
         dump('after looking up gen by gen_number')
+
         metadata = generation.get_file_metadata()
         dump('after getting file metadata for generation')
 
-        sets = [
-            set(metadata.get_file_chunk_ids(filename))
-            for filename in metadata
-        ]
-        dump('after building list of sets of chunkids used by files')
-        union = set().union(*sets)
+        union = set()
+        for filename in metadata:
+            union = union.union(set(metadata.get_file_chunk_ids(filename)))
         dump('after building union of sets')
 
         result = list(union)
         dump('after constructing result')
+
         return result
 
     def get_file_children(self, gen_number, filename):
