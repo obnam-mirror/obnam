@@ -408,6 +408,8 @@ class GAClient(object):
         n = 0
         for filename in metadata:
             n += 1
+            if (n % 1000) == 0:
+                dump('gen has at least {} files'.format(n))
             union = union.union(set(metadata.get_file_chunk_ids(filename)))
         dump('after building union of sets')
         dump('gen has {} files'.format(n))
