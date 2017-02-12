@@ -384,23 +384,24 @@ class GAClient(object):
 
     def get_generation_chunk_ids(self, gen_number):
         if hasattr(self, '_dumper'):
-            dumper = self._dumper
-        dumper.dump_memory_profile('before getting chunk ids used by genaration')
+            dump = self._dumper.dump_memory_profile
+        else:
+            dump = lambda s: None
+        dump('before getting chunk ids used by genaration')
         self._load_data()
-        dumper.dump_memory_profile('after loading data')
+        dump('after loading data')
         generation = self._lookup_generation_by_gen_number(gen_number)
-        dumper.dump_memory_profile('after looking up gen by gen_number')
+        dump('after looking up gen by gen_number')
         metadata = generation.get_file_metadata()
-        dumper.dump_memory_profile('after getting file metadata for generation')
-        sets = [
-            set(metadata.get_file_chunk_ids(filename))
-            for filename in metadata
-        ]
-        dumper.dump_memory_profile('after building list of sets of chunkids used by files')
-        union = set().union(*sets)
-        dumper.dump_memory_profile('after building union of sets')
+        dump('after getting file metadata for generation')
+
+        union = set()
+        for filename in metadata:
+            union = union.union(set(metadata.get_file_chunk_ids(filename)))
+
+        dump('after building union of sets')
         result = list(union)
-        dumper.dump_memory_profile('after constructing result')
+        dump('after constructing result')
         return result
 
     def get_file_children(self, gen_number, filename):
