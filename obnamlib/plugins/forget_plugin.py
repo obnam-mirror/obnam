@@ -77,7 +77,7 @@ class ForgetPlugin(obnamlib.ObnamPlugin):
 
         self.repo.lock_everything()
 
-        self.app.dump_memory_profile('at beginning')
+        self.app.dump_memory_profile('at the very beginning')
         client_name = self.app.settings['client-name']
         self.app.dump_memory_profile('client name found')
         if args:
