@@ -228,6 +228,7 @@ class GAClient(object):
             'dump-memory-profile': True,
             'memory-dump-interval': 0,
         })
+        self._dumper = dumper
         chunks_in_removed = self.get_generation_chunk_ids(gen_number)
         dumper.dump_memory_profile('after getting chunks in removed gen')
         chunks_remaining = self._get_chunk_ids_used_by_generations(remaining)
@@ -382,15 +383,25 @@ class GAClient(object):
                 filename=filename)
 
     def get_generation_chunk_ids(self, gen_number):
+        if hasattr(self, '_dumper'):
+            dumper = self._dumper
+        dumper.dump_memory_profile('before getting chunk ids used by genaration')
         self._load_data()
+        dumper.dump_memory_profile('after loading data')
         generation = self._lookup_generation_by_gen_number(gen_number)
+        dumper.dump_memory_profile('after looking up gen by gen_number')
         metadata = generation.get_file_metadata()
+        dumper.dump_memory_profile('after getting file metadata for generation')
         sets = [
             set(metadata.get_file_chunk_ids(filename))
             for filename in metadata
         ]
+        dumper.dump_memory_profile('after building list of sets of chunkids used by files')
         union = set().union(*sets)
-        return list(union)
+        dumper.dump_memory_profile('after building union of sets')
+        result = list(union)
+        dumper.dump_memory_profile('after constructing result')
+        return result
 
     def get_file_children(self, gen_number, filename):
         self._load_data()
