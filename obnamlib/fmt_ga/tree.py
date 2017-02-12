@@ -1,4 +1,4 @@
-# Copyright 2015-2016  Lars Wirzenius
+# Copyright 2015-2017  Lars Wirzenius
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,6 +16,7 @@
 # =*= License: GPL-3+ =*=
 
 
+import logging
 import os
 
 import obnamlib
@@ -166,6 +167,7 @@ class DirectoryObjectCache(object):
             for pathname, dirobj in self._objs.items():
                 if not dirobj.is_mutable():
                     del self._objs[pathname]
+                    logging.debug('Deleted %s from DirObjCache', pathname)
 
     def clear(self):
         self._objs = {}
