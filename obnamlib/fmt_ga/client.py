@@ -1,4 +1,4 @@
-# Copyright 2015-2016  Lars Wirzenius
+# Copyright 2015-2017  Lars Wirzenius
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -229,12 +229,17 @@ class GAClient(object):
             'memory-dump-interval': 0,
         })
         self._dumper = dumper
+
         chunks_in_removed = self.get_generation_chunk_ids(gen_number)
         dumper.dump_memory_profile('after getting chunks in removed gen')
+
         chunks_remaining = self._get_chunk_ids_used_by_generations(remaining)
-        dumper.dump_memory_profile('after getting chunks in remaining generations')
+        dumper.dump_memory_profile(
+            'after getting chunks in remaining generations')
+
         unused_chunks = set(chunks_in_removed).difference(chunks_remaining)
-        dumper.dump_memory_profile('after getting computing set of chunks to remove')
+        dumper.dump_memory_profile(
+            'after getting computing set of chunks to remove')
 
         self._generations.set_generations(remaining)
 
@@ -386,7 +391,8 @@ class GAClient(object):
         if hasattr(self, '_dumper'):
             dump = self._dumper.dump_memory_profile
         else:
-            dump = lambda s: None
+            def dump(msg):
+                return None
         dump('before getting chunk ids used by genaration')
         self._load_data()
         dump('after loading data')
@@ -395,11 +401,14 @@ class GAClient(object):
         metadata = generation.get_file_metadata()
         dump('after getting file metadata for generation')
 
-        union = set()
-        for filename in metadata:
-            union = union.union(set(metadata.get_file_chunk_ids(filename)))
-
+        sets = [
+            set(metadata.get_file_chunk_ids(filename))
+            for filename in metadata
+        ]
+        dump('after building list of sets of chunkids used by files')
+        union = set().union(*sets)
         dump('after building union of sets')
+
         result = list(union)
         dump('after constructing result')
         return result

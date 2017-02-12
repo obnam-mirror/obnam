@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2016  Lars Wirzenius
+# Copyright (C) 2010-2017  Lars Wirzenius
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -96,7 +96,8 @@ class ForgetPlugin(obnamlib.ObnamPlugin):
         for genid in removeids:
             self.app.ts['gen'] = genid
             chunk_ids = self.remove(genid)
-            self.app.dump_memory_profile('after marking gen for removal (about to remove chunks)')
+            self.app.dump_memory_profile(
+                'after marking gen for removal (about to remove chunks)')
             for unused_chunk_id in chunk_ids:
                 self.repo.remove_chunk_from_indexes(
                     unused_chunk_id, client_name)
