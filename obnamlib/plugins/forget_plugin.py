@@ -77,27 +77,19 @@ class ForgetPlugin(obnamlib.ObnamPlugin):
 
         self.repo.lock_everything()
 
-        self.app.dump_memory_profile('at the very beginning')
         client_name = self.app.settings['client-name']
-        self.app.dump_memory_profile('client name found')
         if args:
             removeids = self.get_genids_to_remove_from_args(client_name, args)
-            self.app.dump_memory_profile('genids to remove given explicitly')
         elif self.app.settings['keep']:
             genlist = self.get_all_generations(client_name)
             removeids = self.choose_genids_to_remove_using_keep_policy(genlist)
-            self.app.dump_memory_profile('genids to remove from keep policy')
         else:
             removeids = []
-            self.app.dump_memory_profile('no genids to remove')
-        self.app.dump_memory_profile('after choosing genids to remove')
 
         self.app.ts['gens'] = removeids
         for genid in removeids:
             self.app.ts['gen'] = genid
             chunk_ids = self.remove(genid)
-            self.app.dump_memory_profile(
-                'after marking gen for removal (about to remove chunks)')
             for unused_chunk_id in chunk_ids:
                 self.repo.remove_chunk_from_indexes(
                     unused_chunk_id, client_name)
