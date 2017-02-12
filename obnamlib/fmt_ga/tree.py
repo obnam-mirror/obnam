@@ -160,14 +160,18 @@ class DirectoryObjectCache(object):
 
     def __init__(self):
         self.clear()
-        self._max_objs = 10**5
+        self._max_objs = 10**3
 
     def _clear_immutable(self):  # pragma: no cover
         if len(self._objs) >= self._max_objs:
+            logging.debug('DirObjCache has %s iterms', len(self._objs))
             for pathname, dirobj in self._objs.items():
                 if not dirobj.is_mutable():
                     del self._objs[pathname]
                     logging.debug('Deleted %s from DirObjCache', pathname)
+            logging.debug(
+                'After dropping immutable, DirObjCache has %s iterms',
+                len(self._objs))
 
     def clear(self):
         self._objs = {}
