@@ -405,9 +405,12 @@ class GAClient(object):
         dump('after getting file metadata for generation')
 
         union = set()
+        n = 0
         for filename in metadata:
+            n += 1
             union = union.union(set(metadata.get_file_chunk_ids(filename)))
         dump('after building union of sets')
+        dump('gen has {} files'.format(n))
 
         result = list(union)
         dump('after constructing result')
