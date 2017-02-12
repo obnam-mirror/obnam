@@ -388,27 +388,19 @@ class GAClient(object):
         else:
             def dump(msg):
                 return None
-        dump('before getting chunk ids used by genaration')
 
         self._load_data()
-        dump('after loading data')
 
         generation = self._lookup_generation_by_gen_number(gen_number)
-        dump('after looking up gen by gen_number')
 
         metadata = generation.get_file_metadata()
         dump('after getting file metadata for generation')
 
-        n = 0
         for filename in metadata:
-            n += 1
-            if (n % 1000) == 0:
-                dump('gen has at least {} files'.format(n))
             chunk_ids = metadata.get_file_chunk_ids(filename)
             for chunk_id in chunk_ids:
                 yield chunk_id
         dump('after yielding all chunk ids')
-        dump('gen has {} files'.format(n))
 
     def _generate_chunk_ids_in_generations(self, generations):
         for generation in generations:
