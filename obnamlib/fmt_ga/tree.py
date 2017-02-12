@@ -168,7 +168,6 @@ class DirectoryObjectCache(object):
             for pathname, dirobj in self._objs.items():
                 if not dirobj.is_mutable():
                     del self._objs[pathname]
-                    logging.debug('Deleted %s from DirObjCache', pathname)
             logging.debug(
                 'After dropping immutable, DirObjCache has %s iterms',
                 len(self._objs))
