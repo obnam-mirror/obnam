@@ -223,9 +223,16 @@ class GAClient(object):
                 client_name=self._client_name,
                 gen_id=gen_number)
 
+        dumper = obnamlib.MemoryProfileDumper({
+            'dump-memory-profile': True,
+            'memory-dump-interval': 0,
+        })
         chunks_in_removed = self.get_generation_chunk_ids(gen_number)
+        dumper.dump_memory_profile('after getting chunks in removed gen')
         chunks_remaining = self._get_chunk_ids_used_by_generations(remaining)
+        dumper.dump_memory_profile('after getting chunks in remaining generations')
         unused_chunks = set(chunks_in_removed).difference(chunks_remaining)
+        dumper.dump_memory_profile('after getting computing set of chunks to remove')
 
         self._generations.set_generations(remaining)
 
