@@ -236,6 +236,8 @@ class GAClient(object):
         for chunk_id in self._generate_chunk_ids_in_generations(remaining):
             if chunk_id in chunks_to_remove:
                 chunks_to_remove.remove(chunk_id)
+                if len(chunks_to_remove) == 0:
+                    break
         dumper.dump_memory_profile('after computing chunk uniq to removed gen')
 
         self._generations.set_generations(remaining)
