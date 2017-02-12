@@ -223,7 +223,8 @@ class GAClient(object):
                 client_name=self._client_name,
                 gen_id=gen_number)
 
-        dumper = obnamlib.MemoryProfileDumper({
+        import cliapp
+        dumper = cliapp.MemoryProfileDumper({
             'dump-memory-profile': True,
             'memory-dump-interval': 0,
         })
