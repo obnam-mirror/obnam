@@ -335,10 +335,7 @@ class RestorePlugin(obnamlib.ObnamPlugin):
                 hole_at_end = False
             self.app.ts['current-bytes'] += len(data)
         if hole_at_end:
-            pos = f.tell()
-            if pos > 0:
-                f.seek(-1, 1)
-                f.write('\0')
+            f.truncate()
 
     def verify_chunk_checksum(self, data, chunk_id):
         # FIXME: RepositoryInterface doesn't currently seem to provide
