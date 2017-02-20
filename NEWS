@@ -18,6 +18,10 @@ Version 1.21+git, not yet released
 * Lars Wirzenius made `obnam restore` require absolute paths for files
   to be restored.
 
+* Lars Wirzenius made `obnam forget` use a little less memory. The
+  amount depends on the number of genrations and the chunks they
+  refer to.
+
 Version 1.21, released 2016-12-29
 ------------------------------------
 
