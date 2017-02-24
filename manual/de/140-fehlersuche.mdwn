@@ -39,6 +39,12 @@ folgende Informationen dabei, das Problem einzugrenzen.
   Auf dieser öffentlich archivierten Mailingliste helfen Benutzer anderen
   Benutzern.
 
+* Beim Antworten an `obnam-support`, bitte **immer** ein CC an die
+  Mailingliste schicken. So können auch andere die Antwort lesen,
+  was die Chance erhöht, das jemand anders (der evtl. das Problem
+  besser versteht), besser helfen kann. Außerdem kann die archivierte
+  Diskussion anderen Lesern helfen, manchmal sogar Jahre später.
+
 * Beschreiben Sie den Fehler. Was wollten Sie tun, was ist stattdessen
   passiert?
 

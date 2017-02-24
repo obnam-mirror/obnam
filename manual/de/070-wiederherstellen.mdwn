@@ -76,7 +76,7 @@ einen Befehl wie diesen aus:
 
     obnam restore --to /tmp/tomjon-restored /home/tomjon/Documents
 
-So wir das angegebene Verzeichnis wieder hergestellt. Ohne Angabe, was wieder
+So wird das angegebene Verzeichnis wieder hergestellt. Ohne Angabe, was wieder
 herzustellen ist wird die gesamte neueste Generation wieder hergestellt.
 Eine andere Generation währen Sie mit `--generation` aus:
 
@@ -87,6 +87,10 @@ So wird verhindert, das Sie ein bereits existierendes Verzeichnis mit den
 wieder hergestellten Daten überschreiben. Wenn Sie Ihre Live-Daten
 wirklich ersetzen möchten, sollten Sie zunächst in ein temporäres Verzeichnis
 zurücksichern und dann die Daten verschieben.
+
+Die Datei bzw. das Verzeichnis das Sie wiederherstellen möchten muss mit
+absolutem Pfad angegeben werden, also beginnend mit /. Es darf nicht
+relativ zum aktuellen Verzeichnis sein.
 
 Konkretes Beispiel einer Wiederherstellung
 ------------------------------------------
