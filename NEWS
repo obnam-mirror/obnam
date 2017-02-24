@@ -22,6 +22,9 @@ Version 1.21+git, not yet released
   amount depends on the number of genrations and the chunks they
   refer to.
 
+* Jan Niggemann updated the German translation of the Obnam manual to
+  match recent changes in the English version.
+
 Version 1.21, released 2016-12-29
 ------------------------------------
 
