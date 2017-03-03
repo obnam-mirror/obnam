@@ -25,6 +25,8 @@ Version 1.21+git, not yet released
 * Jan Niggemann updated the German translation of the Obnam manual to
   match recent changes in the English version.
 
+* SanskritFritz and Ian Cambell fixed the kdirstat plugin.
+
 Version 1.21, released 2016-12-29
 ------------------------------------
 
