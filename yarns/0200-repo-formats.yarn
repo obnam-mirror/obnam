@@ -99,6 +99,7 @@ against the manifest.
     done
     summain -r --exclude=Ino --exclude=Dev --exclude=Uid \
         --exclude=Username --exclude=Gid --exclude=Group \
+        --checksum=SHA1 \
         . | normalise_manifest_times > "$DATADIR/restored-manifest"
     normalise_manifest_times "$DATADIR/$MATCH_2" \
         > "$DATADIR/original-manifest"

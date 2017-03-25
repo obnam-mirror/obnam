@@ -99,6 +99,7 @@ class CreateReferenceRepository(cliapp.Application):
         cliapp.runcmd(
             ['summain', '--exclude=Ino', '--exclude=Dev', '--exclude=Uid',
              '--exclude=Username', '--exclude=Gid', '--exclude=Group',
+             '--checksum=SHA1',
              '-r', '--output', manifest_name, dirname])
 
     def backup(self, live_dir, repo_dir):

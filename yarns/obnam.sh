@@ -173,7 +173,7 @@ remove_nlink_for_directories()
 
 manifest()
 {
-    summain -r "$1" --exclude Ino --exclude Dev |
+    summain -r "$1" --exclude Ino --exclude Dev -c SHA1 |
     normalise_manifest_times |
     remove_nlink_for_directories
 }

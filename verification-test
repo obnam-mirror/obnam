@@ -34,7 +34,7 @@
 # fail even though Obnam was working ine: it's just that some file changed
 # between Obnam backing it up and summain including it in the manifest.
 #
-# Copyright 2011-2014  Lars Wirzenius
+# Copyright 2011-2014,2017  Lars Wirzenius
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -76,7 +76,7 @@ backup()
     then
         die "gen is empty"
     fi
-    summain "$dir" -r --output="$repo/$client.$gen.summain"
+    summain "$dir" -r --output="$repo/$client.$gen.summain" -c SHA1
 }
 
 abspath()
@@ -103,7 +103,8 @@ verify()
         ./obnam --no-default-configs --config="$conf" \
             restore --to="$tempdir/$gen" --generation="$gen" || \
             exit 42
-        summain "$tempdir/$gen/$dir" -r --output="$tempdir/summain.$gen"
+        summain "$tempdir/$gen/$dir" -r --output="$tempdir/summain.$gen" \
+                -c SHA1
         if ! diff -u "$repo/$client.$gen.summain" "$tempdir/summain.$gen"
         then
             die "generation $gen failed to restore properly, see $tempdir"
