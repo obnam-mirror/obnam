@@ -22,6 +22,7 @@ import tracing
 
 import cliapp
 import larch
+import paramiko
 import ttystatus
 
 import obnamlib
@@ -30,6 +31,11 @@ import obnamlib
 class ObnamIOError(obnamlib.ObnamError):
 
     msg = 'I/O error: {filename}: {errno}: {strerror}'
+
+
+class ObnamSSHError(obnamlib.ObnamError):
+
+    msg = 'SSH error: {msg}'
 
 
 class ObnamSystemError(obnamlib.ObnamError):
@@ -221,6 +227,10 @@ class App(cliapp.Application):
                 self.hooks.call('config-loaded')
                 cliapp.Application.process_args(self, args)
                 self.hooks.call('shutdown')
+            except paramiko.SSHException as e:
+                logging.critical(
+                    'Caught SSHExcpetion: %s', str(e), exc_info=True)
+                raise ObnamSSHError(msg=str(e))
             except IOError as e:
                 logging.critical('Caught IOError: %s', str(e), exc_info=True)
                 raise ObnamIOError(

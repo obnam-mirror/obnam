@@ -27,6 +27,10 @@ Version 1.21+git, not yet released
 
 * SanskritFritz and Ian Cambell fixed the kdirstat plugin.
 
+* Lars Wirzenius changed Obnam to hide a Python stack trace when
+  there's a problem with the SSH connection (e.g., failure to
+  authenticate, or existing connection breaks).
+
 Version 1.21, released 2016-12-29
 ------------------------------------
 
