@@ -16,6 +16,14 @@
 # =*= License: GPL-3+ =*=
 
 
+# Set GNUPGHOME so that we always a) use a safe gnupg dir and b) it's a
+# copy of the test dir.
+
+GNUPGHOME="$DATADIR/dot-gnupg"
+mkdir -p "$GNUPGHOME"
+rsync -a --delete "$SRCDIR/test-gpghome/." "$GNUPGHOME/."
+
+
 # A helper to print an error message and terminate.
 
 die()
