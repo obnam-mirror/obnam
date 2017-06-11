@@ -192,7 +192,7 @@ class GAChunkIndexes(object):
         self._used_by_tree.insert(chunk_id, None)
 
     def remove_unused_chunks(self, chunk_store):
-        unused_chunks = self.get_unused_chunks)
+        unused_chunks = self.get_unused_chunks()
         # FIXME: Drop unused chunks from all cowtreess
 
         maybe_unused_bags = self.get_bags_containing_chunks(
@@ -215,7 +215,7 @@ class GAChunkIndexes(object):
         return set(
             chunk_id
             for chunk_id in chunk_ids
-            chunk_store.get_bag_id(chunk_id)
+            if chunk_store.get_bag_id(chunk_id)
         )
 
     def bag_is_used(self, chunk_ids):
