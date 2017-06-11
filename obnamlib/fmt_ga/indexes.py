@@ -178,8 +178,7 @@ class GAChunkIndexes(object):
     def _remove_chunk_by_id(self, chunk_id):
         token = self._by_chunk_id_tree.lookup(chunk_id)
         if token is not None:
-            # FIXME: Should we have CowTree.delete(key)?
-            self._by_chunk_id_tree.insert(chunk_id, None)
+            self._by_chunk_id_tree.remove(chunk_id)
         return token
 
     def _remove_chunk_by_checksum(self, chunk_id, token):
@@ -193,12 +192,13 @@ class GAChunkIndexes(object):
 
     def remove_unused_chunks(self, chunk_store):
         unused_chunks = self.get_unused_chunks()
-        # FIXME: Drop unused chunks from all cowtreess
+        self.drop_unused_chunks(unused_chunks)
 
         maybe_unused_bags = self.get_bags_containing_chunks(
             chunk_store, unused_chunks)
         for bag_id in maybe_unused_bags:
-            if not self.bag_is_used(bag_id):
+            chunk_ids = chunk_store.get_chunks_in_bag(bag_id)
+            if self.any_chunk_is_used_by_someone(chunk_ids):
                 chunk_store.remove_bag(bag_id)
 
     def get_unused_chunks(self):
@@ -209,18 +209,22 @@ class GAChunkIndexes(object):
         ]
 
     def is_chunk_used_by_anyone(self, chunk_id):
-        return self._used_by_tree.lookup(chunk_id) != []
+        return self._used_by_tree.lookup(chunk_id) not in (None, [])
+
+    def drop_unused_chunks(self, chunk_ids):
+        # By this time we know the chunk is only in the used_by tree.
+        for chunk_id in chunk_ids:
+            self._used_by_tree.remove(chunk_id)
 
     def get_bags_containing_chunks(self, chunk_store, chunk_ids):
         return set(
-            chunk_id
+            chunk_store.get_bag_id(chunk_id)
             for chunk_id in chunk_ids
-            if chunk_store.get_bag_id(chunk_id)
         )
 
-    def bag_is_used(self, chunk_ids):
-        return any(
-            self.is_chunk_used_by_anyone(chunk_id)
+    def any_chunk_is_used_by_someone(self, chunk_ids):
+        return all(
+            not self.is_chunk_used_by_anyone(chunk_id)
             for chunk_id in chunk_ids
         )
 
