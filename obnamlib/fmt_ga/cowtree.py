@@ -69,6 +69,7 @@ class CowTree(object):
         self._leaf_list.update_leaf(leaf_id, keys[0], keys[-1])
         if len(leaf) > self._max_keys_per_leaf:
             self._leaf_list.drop_leaf(leaf_id)
+            self._store.remove_leaf(leaf_id)
             self._split_leaf(leaf)
 
     def _split_leaf(self, leaf):
@@ -91,6 +92,7 @@ class CowTree(object):
             self._leaf_list.drop_leaf(leaf_id)
             leaf = self._store.get_leaf(leaf_id)
             leaf.remove(key)
+            self._store.remove_leaf(leaf_id)
             if len(leaf) > 0:
                 self._make_split_leaf(leaf, list(sorted(leaf.keys())))
 
