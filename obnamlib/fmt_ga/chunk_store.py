@@ -74,6 +74,9 @@ class GAChunkStore(object):
         for i in range(len(bag)):
             yield obnamlib.make_object_id(bag_id, i)
 
+    def remove_bag(self, bag_id):
+        self._bag_store.remove_bag(bag_id)
+
     def has_chunk(self, chunk_id):
         # This is ugly, 'cause it requires reading in the whole bag.
         # We could easily check if the bag exists, but not whether it
