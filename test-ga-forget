@@ -1,0 +1,32 @@
+#!/bin/sh
+
+set -eu
+
+obnam()
+{
+    ./obnam --no-default-config \
+            --repository t.repo \
+            --repository-format green-albatross-20160813 \
+            --root t.data \
+            --log t.log --log-level debug \
+            "$@"
+}
+
+rm -rf t.data t.repo t.log
+genbackupdata --create 100M t.data
+obnam backup
+genid="$(obnam genids)"
+obnam forget "$genid"
+
+echo
+size="$(du -sm t.repo | awk '{print $1}')"
+echo "Repository size: $size"
+echo -n "Generations: "
+obnam genids | tr '\n' ' '
+echo
+
+if [ "$size" -gt 1 ]
+then
+    echo "FORGET DIDN'T REMOVE DATA" 1>&2
+    exit 1
+fi
