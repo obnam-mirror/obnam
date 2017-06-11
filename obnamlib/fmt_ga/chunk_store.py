@@ -65,6 +65,15 @@ class GAChunkStore(object):
                 filename=None)
         return content
 
+    def get_bag_id(self, chunk_id):
+        bag_id, obj_id = obnamlib.parse_object_id(chunk_id)
+        return bag_id
+
+    def get_chunks_in_bag(self, bag_id):
+        bag = self._bag_store.get_bag(bag_id)
+        for i in range(len(bag)):
+            yield obnamlib.make_object_id(bag_id, i)
+
     def has_chunk(self, chunk_id):
         # This is ugly, 'cause it requires reading in the whole bag.
         # We could easily check if the bag exists, but not whether it
