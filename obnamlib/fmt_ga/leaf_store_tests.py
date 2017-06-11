@@ -40,6 +40,12 @@ class LeafStoreTests(object):
     def test_returns_None_if_leaf_is_missing(self):
         self.assertEqual(self.ls.get_leaf(42), None)
 
+    def test_removes_leaf(self):
+        leaf = {'foo': 'bar'}
+        leaf_id = self.ls.put_leaf(leaf)
+        self.ls.remove_leaf(leaf_id)
+        self.assertEqual(self.ls.get_leaf(leaf_id), None)
+
     def test_has_flush(self):
         self.assertEqual(self.ls.flush(), None)
 
