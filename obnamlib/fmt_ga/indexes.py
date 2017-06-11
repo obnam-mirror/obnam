@@ -209,7 +209,7 @@ class GAChunkIndexes(object):
         ]
 
     def is_chunk_used_by_anyone(self, chunk_id):
-        return self._used_by_tree(chunk_id) != []
+        return self._used_by_tree.lookup(chunk_id) != []
 
     def get_bags_containing_chunks(self, chunk_store, chunk_ids):
         return set(
