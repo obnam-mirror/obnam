@@ -52,6 +52,12 @@ class CowLeafTests(unittest.TestCase):
         leaf.insert('foo', 'bar')
         self.assertEqual(leaf.keys(), ['foo'])
 
+    def test_removes_key(self):
+        leaf = obnamlib.CowLeaf()
+        leaf.insert('foo', 'bar')
+        leaf.remove('foo')
+        self.assertEqual(leaf.keys(), [])
+
     def test_dict_round_trip(self):
         leaf = obnamlib.CowLeaf()
         leaf.insert('foo', 'bar')

@@ -36,6 +36,10 @@ class CowLeaf(object):
     def insert(self, key, value):
         self._dict[key] = value
 
+    def remove(self, key):
+        if key in self._dict:
+            del self._dict[key]
+
     def as_dict(self):
         return copy.deepcopy(self._dict)
 
