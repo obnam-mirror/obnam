@@ -198,7 +198,7 @@ class GAChunkIndexes(object):
             chunk_store, unused_chunks)
         for bag_id in maybe_unused_bags:
             chunk_ids = chunk_store.get_chunks_in_bag(bag_id)
-            if self.any_chunk_is_used_by_someone(chunk_ids):
+            if not self.any_chunk_is_used_by_someone(chunk_ids):
                 chunk_store.remove_bag(bag_id)
 
     def get_unused_chunks(self):

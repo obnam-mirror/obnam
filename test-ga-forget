@@ -13,7 +13,7 @@ obnam()
 }
 
 rm -rf t.data t.repo t.log
-genbackupdata --create 100M t.data
+genbackupdata --create 1G t.data
 obnam backup
 genid="$(obnam genids)"
 obnam forget "$genid"
@@ -25,7 +25,7 @@ echo -n "Generations: "
 obnam genids | tr '\n' ' '
 echo
 
-if [ "$size" -gt 1 ]
+if [ "$size" -gt 10 ]
 then
     echo "FORGET DIDN'T REMOVE DATA" 1>&2
     exit 1
