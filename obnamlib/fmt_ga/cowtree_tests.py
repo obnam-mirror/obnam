@@ -28,6 +28,9 @@ class CowTreeTests(unittest.TestCase):
         self.cow = obnamlib.CowTree()
         self.cow.set_leaf_store(self.ls)
 
+    def test_has_no_keys_initially(self):
+        self.assertEqual(list(self.cow.keys()), [])
+
     def test_lookup_returns_none_if_key_is_missing(self):
         self.assertEqual(self.cow.lookup(42), None)
 
@@ -36,6 +39,24 @@ class CowTreeTests(unittest.TestCase):
         value = 'barvalue'
         self.cow.insert(key, value)
         self.assertEqual(self.cow.lookup(key), value)
+        self.assertEqual(list(self.cow.keys()), [key])
+
+    def test_removes_only_key_in_blob(self):
+        key = 'fookey'
+        value = 'barvalue'
+        self.cow.insert(key, value)
+        self.cow.remove(key)
+        self.assertEqual(list(self.cow.keys()), [])
+
+    def test_removes_one_of_the_keys_in_blob(self):
+        key = 'fookey'
+        value = 'barvalue'
+        key2 = 'fookey2'
+        value2 = 'barvalue2'
+        self.cow.insert(key, value)
+        self.cow.insert(key2, value2)
+        self.cow.remove(key)
+        self.assertEqual(list(self.cow.keys()), [key2])
 
     def test_inserts_many_keys(self):
         N = 10

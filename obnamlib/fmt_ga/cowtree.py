@@ -85,11 +85,22 @@ class CowTree(object):
         new_id = self._store.put_leaf(new)
         self._leaf_list.insert_leaf(sorted_keys[0], sorted_keys[-1], new_id)
 
-    def keys(self):
-        for leaf_id in self._leaf_list.leaf_ids():
+    def remove(self, key):
+        leaf_id = self._leaf_list.find_leaf_for_key(key)
+        if leaf_id is not None:
+            self._leaf_list.drop_leaf(leaf_id)
             leaf = self._store.get_leaf(leaf_id)
-            for key in leaf.keys():
-                yield key
+            leaf.remove(key)
+            if len(leaf) > 0:
+                self._make_split_leaf(leaf, list(sorted(leaf.keys())))
+
+    def keys(self):
+        leaf_ids = self._leaf_list.leaf_ids()
+        if leaf_ids:
+            for leaf_id in leaf_ids:
+                leaf = self._store.get_leaf(leaf_id)
+                for key in leaf.keys():
+                    yield key
 
     def commit(self):
         fake_leaf = obnamlib.CowLeaf()
