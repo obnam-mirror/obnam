@@ -85,6 +85,12 @@ class CowTree(object):
         new_id = self._store.put_leaf(new)
         self._leaf_list.insert_leaf(sorted_keys[0], sorted_keys[-1], new_id)
 
+    def keys(self):
+        for leaf_id in self._leaf_list.leaf_ids():
+            leaf = self._store.get_leaf(leaf_id)
+            for key in leaf.keys():
+                yield key
+
     def commit(self):
         fake_leaf = obnamlib.CowLeaf()
         fake_leaf.insert('leaf_list', self._leaf_list.as_dict())
@@ -105,6 +111,10 @@ class _LeafList(object):
 
     def from_dict(self, some_dict):
         self._leaf_list = some_dict
+
+    def leaf_ids(self):
+        for leaf_info in self._leaf_list:
+            yield leaf_info['id']
 
     def find_leaf_for_key(self, key):
         # If there are no leaves, we can't pick one for key.

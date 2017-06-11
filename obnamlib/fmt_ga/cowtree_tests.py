@@ -64,3 +64,9 @@ class CowTreeTests(unittest.TestCase):
         cow2.set_leaf_store(self.ls)
         cow2.set_list_node(list_id)
         self.assertEqual(cow2.lookup(key), value)
+
+    def test_iterates_over_leaf_keys(self):
+        key = 'fookey'
+        value = 'barvalue'
+        self.cow.insert(key, value)
+        self.assertEqual(list(self.cow.keys()), [key])
