@@ -1,4 +1,4 @@
-# Copyright 2016  Lars Wirzenius
+# Copyright 2016-2017  Lars Wirzenius
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -51,6 +51,12 @@ class CowLeafTests(unittest.TestCase):
         leaf = obnamlib.CowLeaf()
         leaf.insert('foo', 'bar')
         self.assertEqual(leaf.keys(), ['foo'])
+
+    def test_removes_key(self):
+        leaf = obnamlib.CowLeaf()
+        leaf.insert('foo', 'bar')
+        leaf.remove('foo')
+        self.assertEqual(leaf.keys(), [])
 
     def test_dict_round_trip(self):
         leaf = obnamlib.CowLeaf()

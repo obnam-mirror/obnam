@@ -1,4 +1,4 @@
-# Copyright 2016  Lars Wirzenius
+# Copyright 2016-2017  Lars Wirzenius
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,6 +28,9 @@ class CowTreeTests(unittest.TestCase):
         self.cow = obnamlib.CowTree()
         self.cow.set_leaf_store(self.ls)
 
+    def test_has_no_keys_initially(self):
+        self.assertEqual(list(self.cow.keys()), [])
+
     def test_lookup_returns_none_if_key_is_missing(self):
         self.assertEqual(self.cow.lookup(42), None)
 
@@ -36,6 +39,24 @@ class CowTreeTests(unittest.TestCase):
         value = 'barvalue'
         self.cow.insert(key, value)
         self.assertEqual(self.cow.lookup(key), value)
+        self.assertEqual(list(self.cow.keys()), [key])
+
+    def test_removes_only_key_in_blob(self):
+        key = 'fookey'
+        value = 'barvalue'
+        self.cow.insert(key, value)
+        self.cow.remove(key)
+        self.assertEqual(list(self.cow.keys()), [])
+
+    def test_removes_one_of_the_keys_in_blob(self):
+        key = 'fookey'
+        value = 'barvalue'
+        key2 = 'fookey2'
+        value2 = 'barvalue2'
+        self.cow.insert(key, value)
+        self.cow.insert(key2, value2)
+        self.cow.remove(key)
+        self.assertEqual(list(self.cow.keys()), [key2])
 
     def test_inserts_many_keys(self):
         N = 10
@@ -64,3 +85,9 @@ class CowTreeTests(unittest.TestCase):
         cow2.set_leaf_store(self.ls)
         cow2.set_list_node(list_id)
         self.assertEqual(cow2.lookup(key), value)
+
+    def test_iterates_over_leaf_keys(self):
+        key = 'fookey'
+        value = 'barvalue'
+        self.cow.insert(key, value)
+        self.assertEqual(list(self.cow.keys()), [key])

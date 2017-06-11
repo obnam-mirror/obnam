@@ -1,4 +1,4 @@
-# Copyright 2016  Lars Wirzenius
+# Copyright 2016-2017  Lars Wirzenius
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -69,7 +69,12 @@ class CowTree(object):
         self._leaf_list.update_leaf(leaf_id, keys[0], keys[-1])
         if len(leaf) > self._max_keys_per_leaf:
             self._leaf_list.drop_leaf(leaf_id)
+            self._store.remove_leaf(leaf_id)
             self._split_leaf(leaf)
+        else:
+            self._leaf_list.drop_leaf(leaf_id)
+            self._make_split_leaf(leaf, list(sorted(leaf.keys())))
+            self._store.remove_leaf(leaf_id)
 
     def _split_leaf(self, leaf):
         sorted_keys = list(sorted(leaf.keys()))
@@ -84,6 +89,24 @@ class CowTree(object):
             new.insert(key, leaf.lookup(key))
         new_id = self._store.put_leaf(new)
         self._leaf_list.insert_leaf(sorted_keys[0], sorted_keys[-1], new_id)
+
+    def remove(self, key):
+        leaf_id = self._leaf_list.find_leaf_for_key(key)
+        if leaf_id is not None:
+            self._leaf_list.drop_leaf(leaf_id)
+            leaf = self._store.get_leaf(leaf_id)
+            leaf.remove(key)
+            self._store.remove_leaf(leaf_id)
+            if len(leaf) > 0:
+                self._make_split_leaf(leaf, list(sorted(leaf.keys())))
+
+    def keys(self):
+        leaf_ids = list(self._leaf_list.leaf_ids())
+        if leaf_ids:
+            for leaf_id in leaf_ids:
+                leaf = self._store.get_leaf(leaf_id)
+                for key in leaf.keys():
+                    yield key
 
     def commit(self):
         fake_leaf = obnamlib.CowLeaf()
@@ -105,6 +128,10 @@ class _LeafList(object):
 
     def from_dict(self, some_dict):
         self._leaf_list = some_dict
+
+    def leaf_ids(self):
+        for leaf_info in self._leaf_list:
+            yield leaf_info['id']
 
     def find_leaf_for_key(self, key):
         # If there are no leaves, we can't pick one for key.

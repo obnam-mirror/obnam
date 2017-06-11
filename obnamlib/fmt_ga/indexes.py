@@ -1,4 +1,4 @@
-# Copyright 2015-2016  Lars Wirzenius
+# Copyright 2015-2017  Lars Wirzenius
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,6 +16,7 @@
 # =*= License: GPL-3+ =*=
 
 
+import logging
 import os
 
 import obnamlib
@@ -126,6 +127,11 @@ class GAChunkIndexes(object):
     def put_chunk_into_indexes(self, chunk_id, token, client_id):
         self._load_data()
 
+        client_ids = self._used_by_tree.lookup(chunk_id)
+        logging.debug(
+            'xxx before adding to used-by: chunk %r is used by %r',
+            chunk_id, client_ids)
+
         self._by_chunk_id_tree.insert(chunk_id, token)
 
         chunk_ids = self._by_checksum_tree.lookup(token)
@@ -135,12 +141,14 @@ class GAChunkIndexes(object):
             chunk_ids.append(chunk_id)
         self._by_checksum_tree.insert(token, chunk_ids)
 
-        client_ids = self._used_by_tree.lookup(chunk_id)
         if client_ids is None:
             client_ids = [client_id]
         elif client_id not in client_ids:
             client_ids.append(client_id)
         self._used_by_tree.insert(chunk_id, client_ids)
+        logging.debug(
+            'xxx after adding to used-by: chunk %r is used by %r',
+            chunk_id, client_ids)
 
     def find_chunk_ids_by_token(self, token):
         self._load_data()
@@ -164,6 +172,9 @@ class GAChunkIndexes(object):
     def _remove_used_by(self, chunk_id, client_id):
         still_used = False
         client_ids = self._used_by_tree.lookup(chunk_id)
+        logging.debug(
+            'xxx before removing used_by: chunk %r is used by %r',
+            chunk_id, client_ids)
         if client_ids is not None and client_id in client_ids:
             client_ids.remove(client_id)
             self._used_by_tree.insert(chunk_id, client_ids)
@@ -173,13 +184,15 @@ class GAChunkIndexes(object):
                 # We leave an empty list, and use that in
                 # remove_unused_chunks to indicate an unused chunk.
                 pass
+        logging.debug(
+            'xxx after removing used_by: chunk %r is used by %r',
+            chunk_id, client_ids)
         return still_used
 
     def _remove_chunk_by_id(self, chunk_id):
         token = self._by_chunk_id_tree.lookup(chunk_id)
         if token is not None:
-            # FIXME: Should we have CowTree.delete(key)?
-            self._by_chunk_id_tree.insert(chunk_id, None)
+            self._by_chunk_id_tree.remove(chunk_id)
         return token
 
     def _remove_chunk_by_checksum(self, chunk_id, token):
@@ -192,8 +205,52 @@ class GAChunkIndexes(object):
         self._used_by_tree.insert(chunk_id, None)
 
     def remove_unused_chunks(self, chunk_store):
-        # FIXME: This requires having a way to list keys in a CowTree.
-        pass
+        unused_chunks = self.get_unused_chunks()
+        self.drop_unused_chunks(unused_chunks)
+
+        maybe_unused_bags = self.get_bags_containing_chunks(
+            chunk_store, unused_chunks)
+        for bag_id in maybe_unused_bags:
+            chunk_ids = chunk_store.get_chunks_in_bag(bag_id)
+            logging.debug(
+                'remove_unused_chunk: can bag %r be removed?', bag_id)
+            for chunk_id in chunk_ids:
+                logging.debug(
+                    'remove_unused_chunk: chunk %r, used: %r',
+                    chunk_id, self.is_chunk_used_by_anyone(chunk_id))
+            if not self.any_chunk_is_used_by_someone(chunk_ids):
+                logging.debug('remove_unused_chunk: remove bag %r', bag_id)
+                chunk_store.remove_bag(bag_id)
+            else:
+                logging.debug(
+                    'remove_unused_chunk: bag %r cannot be removed', bag_id)
+
+    def get_unused_chunks(self):
+        return [
+            chunk_id
+            for chunk_id in self._used_by_tree.keys()
+            if not self.is_chunk_used_by_anyone(chunk_id)
+        ]
+
+    def is_chunk_used_by_anyone(self, chunk_id):
+        return self._used_by_tree.lookup(chunk_id) not in (None, [])
+
+    def drop_unused_chunks(self, chunk_ids):
+        # By this time we know the chunk is only in the used_by tree.
+        for chunk_id in chunk_ids:
+            self._used_by_tree.remove(chunk_id)
+
+    def get_bags_containing_chunks(self, chunk_store, chunk_ids):
+        return set(
+            chunk_store.get_bag_id(chunk_id)
+            for chunk_id in chunk_ids
+        )
+
+    def any_chunk_is_used_by_someone(self, chunk_ids):
+        return any(
+            self.is_chunk_used_by_anyone(chunk_id)
+            for chunk_id in chunk_ids
+        )
 
     def validate_chunk_content(self, chunk_id):
         return None

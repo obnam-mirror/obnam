@@ -1,4 +1,4 @@
-# Copyright (C) 2009-2015  Lars Wirzenius
+# Copyright (C) 2009-2017  Lars Wirzenius
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -116,7 +116,7 @@ class BackupProgress(object):
     def report_stats(self, output, fs, quiet, report=None):  # pragma: no cover
         if report is None:
             report = self.compute_report(fs)
-            
+
         duration_string = obnamlib.humanise_duration(report['duration'])
 
         chunk_amount, chunk_unit = obnamlib.humanise_size(
@@ -134,7 +134,8 @@ class BackupProgress(object):
         overhead_bytes = max(0, overhead_bytes)
         overhead_amount, overhead_unit = obnamlib.humanise_size(overhead_bytes)
         if report['uploaded-total-bytes'] > 0:
-            overhead_percent = 100.0 * overhead_bytes / report['uploaded-total-bytes']
+            overhead_percent = (
+                100.0 * overhead_bytes / report['uploaded-total-bytes'])
         else:
             overhead_percent = 0.0
 

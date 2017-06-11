@@ -1,0 +1,34 @@
+#!/bin/bash
+# Copyright 2017 Lars Wirzenius
+
+set -eu
+
+obnam()
+{
+    env | grep OBNAM_PROFILE
+    ./obnam --no-default-config \
+            --repository t.repo \
+            --repository-format green-albatross-20160813 \
+            --root t.data \
+            --log t.log --log-level debug \
+            "$@"
+}
+
+rm -rf t.data t.repo t.log t.*.prof
+genbackupdata --create 100M t.data
+OBNAM_PROFILE=t.backup.prof obnam backup
+genid="$(obnam genids)"
+OBNAM_PROFILE=t.forget.prof obnam forget "$genid"
+
+echo
+size="$(du -sm t.repo | awk '{print $1}')"
+echo "Repository size: $size"
+echo -n "Generations: "
+obnam genids | tr '\n' ' '
+echo
+
+if [ "$size" -gt 1 ]
+then
+    echo "FORGET DIDN'T REMOVE DATA" 1>&2
+    exit 1
+fi

@@ -1,4 +1,4 @@
-# Copyright 2015  Lars Wirzenius
+# Copyright 2015,2017  Lars Wirzenius
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -64,6 +64,25 @@ class GAChunkStore(object):
                 chunk_id=chunk_id,
                 filename=None)
         return content
+
+    def get_bag_id(self, chunk_id):
+        bag_id, _ = obnamlib.parse_object_id(chunk_id)
+        return bag_id
+
+    def get_chunks_in_bag(self, bag_id):
+        try:
+            bag = self._bag_store.get_bag(bag_id)
+        except EnvironmentError:
+            pass
+        else:
+            for i in range(len(bag)):
+                yield obnamlib.make_object_id(bag_id, i)
+
+    def remove_bag(self, bag_id):
+        try:
+            self._bag_store.remove_bag(bag_id)
+        except EnvironmentError:
+            pass
 
     def has_chunk(self, chunk_id):
         # This is ugly, 'cause it requires reading in the whole bag.
