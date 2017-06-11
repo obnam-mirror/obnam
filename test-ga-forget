@@ -13,7 +13,7 @@ obnam()
 }
 
 rm -rf t.data t.repo t.log
-genbackupdata --create 1G t.data
+genbackupdata --create 100M t.data
 obnam backup
 genid="$(obnam genids)"
 obnam forget "$genid"

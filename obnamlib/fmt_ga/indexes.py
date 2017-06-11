@@ -16,6 +16,7 @@
 # =*= License: GPL-3+ =*=
 
 
+import logging
 import os
 
 import obnamlib
@@ -198,8 +199,14 @@ class GAChunkIndexes(object):
             chunk_store, unused_chunks)
         for bag_id in maybe_unused_bags:
             chunk_ids = chunk_store.get_chunks_in_bag(bag_id)
+            logging.debug('remove_unused_chunk: can bag %r be removed?', bag_id)
+            for chunk_id in chunk_ids:
+                logging.debug('remove_unused_chunk: chunk %r, used: %r', chunk_id, self.is_chunk_used_by_anyone(chunk_id))
             if not self.any_chunk_is_used_by_someone(chunk_ids):
+                logging.debug('remove_unused_chunk: remove bag %r', bag_id)
                 chunk_store.remove_bag(bag_id)
+            else:
+                logging.debug('remove_unused_chunk: bag %r cannot be removed', bag_id)
 
     def get_unused_chunks(self):
         return [
@@ -223,8 +230,8 @@ class GAChunkIndexes(object):
         )
 
     def any_chunk_is_used_by_someone(self, chunk_ids):
-        return all(
-            not self.is_chunk_used_by_anyone(chunk_id)
+        return any(
+            self.is_chunk_used_by_anyone(chunk_id)
             for chunk_id in chunk_ids
         )
 
