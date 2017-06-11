@@ -212,5 +212,11 @@ class GAChunkIndexes(object):
             chunk_store.get_bag_id(chunk_id)
         )
 
+    def bag_is_used(self, chunk_ids):
+        return any(
+            self.is_chunk_used_by_anyone(chunk_id)
+            for chunk_id in chunk_ids
+        )
+
     def validate_chunk_content(self, chunk_id):
         return None
