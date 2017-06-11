@@ -1,7 +1,6 @@
 setup.py
 
 obnamlib/app.py
-obnamlib/backup_progress.py
 obnamlib/defaults.py
 obnamlib/delegator.py
 obnamlib/fmt_6/__init__.py

@@ -30,12 +30,14 @@ class BackupProgress(object):
         self.started = None
         self.errors = False
 
+        self._now = time.time
+
         self._ts = ts
         self._ts['current-file'] = ''
         self._ts['scanned-bytes'] = 0
         self._ts['uploaded-bytes'] = 0
 
-        if self.ttystatus_supports_multiline():
+        if self.ttystatus_supports_multiline():  # pragma: no cover
             self._ts.format(
                 '%ElapsedTime() Backing up: '
                 'found %Counter(current-file) files, '
@@ -43,7 +45,7 @@ class BackupProgress(object):
                 'uploaded: %ByteSize(uploaded-bytes)\n'
                 '%String(what)'
             )
-        else:
+        else:  # pragma: no cover
             self._ts.format(
                 '%ElapsedTime() '
                 '%Counter(current-file) '
@@ -51,13 +53,16 @@ class BackupProgress(object):
                 '%ByteSize(scanned-bytes) scanned: '
                 '%String(what)')
 
+    def set_time_func(self, now):
+        self._now = now
+
     def ttystatus_supports_multiline(self):
         return hasattr(self._ts, 'start_new_line')
 
-    def clear(self):
+    def clear(self):  # pragma: no cover
         self._ts.clear()
 
-    def finish(self):
+    def finish(self):  # pragma: no cover
         self._ts.finish()
 
     def error(self, msg, exc=None):
@@ -68,11 +73,11 @@ class BackupProgress(object):
 
     def what(self, what_what):
         if self.started is None:
-            self.started = time.time()
+            self.started = self._now()
         self._ts['what'] = what_what
         self._ts.flush()
 
-    def update_progress(self):
+    def update_progress(self):  # pragma: no cover
         self._ts['not-shown'] = 'not shown'
 
     def update_progress_with_file(self, filename, metadata):
@@ -88,68 +93,89 @@ class BackupProgress(object):
         self.uploaded_bytes += amount
         self._ts['uploaded-bytes'] = self.uploaded_bytes
 
-    def update_progress_with_removed_checkpoint(self, gen):
+    def update_progress_with_removed_checkpoint(self, gen):  # pragma: no cover
         self._ts['checkpoint'] = gen
 
-    def report_stats(self, output, fs, quiet):
-        duration = time.time() - self.started
-        duration_string = obnamlib.humanise_duration(duration)
+    def compute_report(self, fs):
+        duration = self._now() - self.started
+        overhead = fs.bytes_written + fs.bytes_read - self.uploaded_bytes
+        speed = self.uploaded_bytes / float(duration)
+
+        return {
+            'duration': duration,
+            'file-count': self.file_count,
+            'backed-up-count': self.backed_up_count,
+            'scanned-bytes': self.scanned_bytes,
+            'uploaded-chunk-bytes': self.uploaded_bytes,
+            'uploaded-total-bytes': fs.bytes_written,
+            'downloaded-total-bytes': fs.bytes_read,
+            'overhead-total-bytes': overhead,
+            'effective-upload-speed': speed,
+        }
+
+    def report_stats(self, output, fs, quiet, report=None):  # pragma: no cover
+        if report is None:
+            report = self.compute_report(fs)
+            
+        duration_string = obnamlib.humanise_duration(report['duration'])
 
         chunk_amount, chunk_unit = obnamlib.humanise_size(
-            self.uploaded_bytes)
+            report['uploaded-total-bytes'])
 
-        ul_amount, ul_unit = obnamlib.humanise_size(fs.bytes_written)
+        ul_amount, ul_unit = obnamlib.humanise_size(
+            report['uploaded-total-bytes'])
 
-        dl_amount, dl_unit = obnamlib.humanise_size(fs.bytes_read)
+        dl_amount, dl_unit = obnamlib.humanise_size(
+            report['downloaded-total-bytes'])
 
         overhead_bytes = (
-            fs.bytes_read + (fs.bytes_written - self.uploaded_bytes))
+            report['downloaded-total-bytes'] +
+            (report['uploaded-total-bytes'] - report['uploaded-total-bytes']))
         overhead_bytes = max(0, overhead_bytes)
-        overhead_amount, overhead_unit = obnamlib.humanise_size(
-            overhead_bytes)
-        if fs.bytes_written > 0:
-            overhead_percent = 100.0 * overhead_bytes / fs.bytes_written
+        overhead_amount, overhead_unit = obnamlib.humanise_size(overhead_bytes)
+        if report['uploaded-total-bytes'] > 0:
+            overhead_percent = 100.0 * overhead_bytes / report['uploaded-total-bytes']
         else:
             overhead_percent = 0.0
 
         speed_amount, speed_unit = obnamlib.humanise_speed(
-            self.uploaded_bytes, duration)
+            report['uploaded-total-bytes'], report['duration'])
 
         logging.info(
             'Backup performance statistics:')
         logging.info(
             '* files found: %s',
-            self.file_count)
+            report['file-count'])
         logging.info(
             '* files backed up: %s',
-            self.backed_up_count)
+            report['backed-up-count'])
         logging.info(
             '* uploaded chunk data: %s bytes (%s %s)',
-            self.uploaded_bytes, chunk_amount, chunk_unit)
+            report['uploaded-total-bytes'], chunk_amount, chunk_unit)
         logging.info(
             '* total uploaded data (incl. metadata): %s bytes (%s %s)',
-            fs.bytes_written, ul_amount, ul_unit)
+            report['uploaded-total-bytes'], ul_amount, ul_unit)
         logging.info(
             '* total downloaded data (incl. metadata): %s bytes (%s %s)',
-            fs.bytes_read, dl_amount, dl_unit)
+            report['downloaded-total-bytes'], dl_amount, dl_unit)
         logging.info(
             '* transfer overhead: %s bytes (%s %s)',
             overhead_bytes, overhead_amount, overhead_unit)
         logging.info(
             '* duration: %s s (%s)',
-            duration, duration_string)
+            report['duration'], duration_string)
         logging.info(
             '* average speed: %s %s',
             speed_amount, speed_unit)
 
         scanned_amount, scanned_unit = obnamlib.humanise_size(
-            self.scanned_bytes)
+            report['scanned-bytes'])
 
         if not quiet:
             output.write(
                 'Backed up %d files (of %d found), containing %.1f %s.\n' %
-                (self.backed_up_count,
-                 self.file_count,
+                (report['backed-up-count'],
+                 report['file-count'],
                  scanned_amount,
                  scanned_unit))
             output.write(
