@@ -1,4 +1,5 @@
 #!/bin/sh
+# Copyright 2017 Lars Wirzenius
 
 set -eu
 
