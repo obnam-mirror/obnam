@@ -142,6 +142,7 @@ class GAChunkIndexes(object):
         elif client_id not in client_ids:
             client_ids.append(client_id)
         self._used_by_tree.insert(chunk_id, client_ids)
+        logging.debug('xxx after adding to used-by: chunk %r is used by %r', chunk_id, client_ids)
 
     def find_chunk_ids_by_token(self, token):
         self._load_data()
@@ -165,6 +166,7 @@ class GAChunkIndexes(object):
     def _remove_used_by(self, chunk_id, client_id):
         still_used = False
         client_ids = self._used_by_tree.lookup(chunk_id)
+        logging.debug('xxx chunk %r is used by %r', chunk_id, client_ids)
         if client_ids is not None and client_id in client_ids:
             client_ids.remove(client_id)
             self._used_by_tree.insert(chunk_id, client_ids)
