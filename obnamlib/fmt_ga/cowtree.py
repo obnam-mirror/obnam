@@ -101,7 +101,7 @@ class CowTree(object):
                 self._make_split_leaf(leaf, list(sorted(leaf.keys())))
 
     def keys(self):
-        leaf_ids = self._leaf_list.leaf_ids()
+        leaf_ids = list(self._leaf_list.leaf_ids())
         if leaf_ids:
             for leaf_id in leaf_ids:
                 leaf = self._store.get_leaf(leaf_id)

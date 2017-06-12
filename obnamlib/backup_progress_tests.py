@@ -103,7 +103,7 @@ class DummyTerminalStatus(object):
 
     def error(self, msg):
         pass
-    
+
     def __setitem__(self, key, value):
         pass
 

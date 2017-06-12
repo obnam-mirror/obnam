@@ -66,7 +66,7 @@ class GAChunkStore(object):
         return content
 
     def get_bag_id(self, chunk_id):
-        bag_id, obj_id = obnamlib.parse_object_id(chunk_id)
+        bag_id, _ = obnamlib.parse_object_id(chunk_id)
         return bag_id
 
     def get_chunks_in_bag(self, bag_id):
