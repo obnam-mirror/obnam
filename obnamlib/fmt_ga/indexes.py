@@ -127,6 +127,9 @@ class GAChunkIndexes(object):
     def put_chunk_into_indexes(self, chunk_id, token, client_id):
         self._load_data()
 
+        client_ids = self._used_by_tree.lookup(chunk_id)
+        logging.debug('xxx before adding to used-by: chunk %r is used by %r', chunk_id, client_ids)
+
         self._by_chunk_id_tree.insert(chunk_id, token)
 
         chunk_ids = self._by_checksum_tree.lookup(token)
@@ -136,7 +139,6 @@ class GAChunkIndexes(object):
             chunk_ids.append(chunk_id)
         self._by_checksum_tree.insert(token, chunk_ids)
 
-        client_ids = self._used_by_tree.lookup(chunk_id)
         if client_ids is None:
             client_ids = [client_id]
         elif client_id not in client_ids:
@@ -166,7 +168,7 @@ class GAChunkIndexes(object):
     def _remove_used_by(self, chunk_id, client_id):
         still_used = False
         client_ids = self._used_by_tree.lookup(chunk_id)
-        logging.debug('xxx chunk %r is used by %r', chunk_id, client_ids)
+        logging.debug('xxx before removing used_by: chunk %r is used by %r', chunk_id, client_ids)
         if client_ids is not None and client_id in client_ids:
             client_ids.remove(client_id)
             self._used_by_tree.insert(chunk_id, client_ids)
@@ -176,6 +178,7 @@ class GAChunkIndexes(object):
                 # We leave an empty list, and use that in
                 # remove_unused_chunks to indicate an unused chunk.
                 pass
+        logging.debug('xxx after removing used_by: chunk %r is used by %r', chunk_id, client_ids)
         return still_used
 
     def _remove_chunk_by_id(self, chunk_id):

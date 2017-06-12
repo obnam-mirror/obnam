@@ -70,12 +70,19 @@ class GAChunkStore(object):
         return bag_id
 
     def get_chunks_in_bag(self, bag_id):
-        bag = self._bag_store.get_bag(bag_id)
-        for i in range(len(bag)):
-            yield obnamlib.make_object_id(bag_id, i)
+        try:
+            bag = self._bag_store.get_bag(bag_id)
+        except EnvironmentError:
+            pass
+        else:
+            for i in range(len(bag)):
+                yield obnamlib.make_object_id(bag_id, i)
 
     def remove_bag(self, bag_id):
-        self._bag_store.remove_bag(bag_id)
+        try:
+            self._bag_store.remove_bag(bag_id)
+        except EnvironmentError:
+            pass
 
     def has_chunk(self, chunk_id):
         # This is ugly, 'cause it requires reading in the whole bag.

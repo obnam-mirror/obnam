@@ -71,6 +71,10 @@ class CowTree(object):
             self._leaf_list.drop_leaf(leaf_id)
             self._store.remove_leaf(leaf_id)
             self._split_leaf(leaf)
+        else:
+            self._leaf_list.drop_leaf(leaf_id)
+            self._make_split_leaf(leaf, list(sorted(leaf.keys())))
+            self._store.remove_leaf(leaf_id)
 
     def _split_leaf(self, leaf):
         sorted_keys = list(sorted(leaf.keys()))
