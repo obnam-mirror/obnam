@@ -31,6 +31,9 @@ Version 1.21+git, not yet released
   there's a problem with the SSH connection (e.g., failure to
   authenticate, or existing connection breaks).
 
+* Lars Wirzenius make the Green Albatross version of `obnam forget`
+  actually free chunks that are no longer used.
+
 Version 1.21, released 2016-12-29
 ------------------------------------
 
