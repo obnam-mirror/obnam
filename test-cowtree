@@ -1,0 +1,63 @@
+#!/usr/bin/python2
+#
+# Copyright 2017  Lars Wirzenius
+
+
+import logging
+import random
+import shutil
+import tempfile
+import time
+
+
+import obnamlib
+
+
+BAG_SIZE = 1024**2
+CACHE_SIZE = BAG_SIZE
+NUM_KEYS = 10**4
+
+
+def measure(func):
+    tmpdir = tempfile.mkdtemp()
+    logging.debug('tmpdir %s', tmpdir)
+    fs = obnamlib.LocalFS(tmpdir)
+
+    bagstore = obnamlib.BagStore()
+    bagstore.set_location(fs, '.')
+
+    blobstore = obnamlib.BlobStore()
+    blobstore.set_bag_store(bagstore)
+    blobstore.set_max_bag_size(BAG_SIZE)
+    blobstore.set_max_cache_bytes(CACHE_SIZE)
+
+    ls = obnamlib.LeafStore()
+    ls.set_blob_store(blobstore)
+
+    cow = obnamlib.CowTree()
+    cow.set_leaf_store(ls)
+
+    started = time.time()
+    func(cow)
+    cow.commit()
+    ended = time.time()
+
+    shutil.rmtree(tmpdir)
+
+    return ended - started
+
+
+def insert_individually(cow):
+    for i in range(NUM_KEYS):
+        key, value = get_keyvalue(i)
+        cow.insert(key, value)
+
+
+def get_keyvalue(i):
+    return str(random.randint(0, 2**63)), 'value-%d' % i
+
+
+
+logging.basicConfig(filename='test-cowtree.log', level=logging.DEBUG)
+
+print 'individually {:.2f}'.format(measure(insert_individually))
