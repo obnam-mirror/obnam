@@ -16,6 +16,9 @@
 # =*= License: GPL-3+ =*=
 
 
+import tracing
+
+
 import obnamlib
 
 
@@ -74,6 +77,7 @@ class CowTree(object):
                     yield key
 
     def commit(self):
+        tracing.trace('start comitting')
         keys = sorted(self.keys())
         leaf = obnamlib.CowLeaf()
         leaf_list = obnamlib.LeafList()
@@ -86,7 +90,10 @@ class CowTree(object):
         if len(leaf) > 0:
             self._add_leaf(leaf_list, leaf)
         leaf_id = self._put_leaf_list(leaf_list)
+        tracing.trace('commit: remove old tree')
         self._remove_old_tree(self._leaf_list)
+        tracing.trace('finish committing')
+        self.set_list_node(leaf_id)
         return leaf_id
 
     def _add_leaf(self, leaf_list, leaf):
@@ -102,5 +109,7 @@ class CowTree(object):
         return list_id
 
     def _remove_old_tree(self, leaf_list):  # pragma: no cover
+        tracing.trace('start removing old cowtree')
         for leaf_id in leaf_list.leaves():
             self._store.remove_leaf(leaf_id)
+        tracing.trace('finished removing old cowtree')

@@ -16,6 +16,9 @@
 # =*= License: GPL-3+ =*=
 
 
+import tracing
+
+
 import obnamlib
 
 
@@ -65,14 +68,18 @@ class LeafStore(LeafStoreInterface):  # pragma: no cover
         self._blob_store = blob_store
 
     def put_leaf(self, leaf):
-        return self._blob_store.put_blob(leaf.as_dict())
+        leaf_id = self._blob_store.put_blob(leaf.as_dict())
+        tracing.trace('new leaf %s', leaf_id)
+        return leaf_id
 
     def get_leaf(self, leaf_id):
+        tracing.trace('leaf_id %s', leaf_id)
         leaf = obnamlib.CowLeaf()
         leaf.from_dict(self._blob_store.get_blob(leaf_id))
         return leaf
 
     def remove_leaf(self, leaf_id):
+        tracing.trace('leaf_id %s', leaf_id)
         # FIXME: This is a bit ugly, since we need to break the
         # bag/blob store abstraction.
         bag_id, _ = obnamlib.parse_object_id(leaf_id)
