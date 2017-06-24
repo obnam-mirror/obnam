@@ -86,6 +86,7 @@ class CowTree(object):
         if len(leaf) > 0:
             self._add_leaf(leaf_list, leaf)
         leaf_id = self._put_leaf_list(leaf_list)
+        self._remove_old_tree(self._leaf_list)
         return leaf_id
 
     def _add_leaf(self, leaf_list, leaf):
@@ -99,3 +100,7 @@ class CowTree(object):
         list_id = self._store.put_leaf(fake_leaf)
         self._store.flush()
         return list_id
+
+    def _remove_old_tree(self, leaf_list):  # pragma: no cover
+        for leaf_id in leaf_list.leaves():
+            self._store.remove_leaf(leaf_id)
