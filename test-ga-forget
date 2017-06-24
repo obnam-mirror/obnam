@@ -11,6 +11,7 @@ obnam()
             --repository-format green-albatross-20160813 \
             --root t.data \
             --log t.log --log-level debug \
+            --trace fmt_ga \
             "$@"
 }
 
