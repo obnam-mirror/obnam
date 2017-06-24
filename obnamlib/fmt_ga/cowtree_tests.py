@@ -57,6 +57,7 @@ class CowTreeTests(unittest.TestCase):
         self.cow.insert(key2, value2)
         self.cow.remove(key)
         self.assertEqual(list(self.cow.keys()), [key2])
+        self.assertEqual(self.cow.lookup(key), None)
 
     def test_inserts_many_keys(self):
         N = 10
@@ -72,6 +73,8 @@ class CowTreeTests(unittest.TestCase):
         for key, value in reversed(keyvalues):
             self.cow.insert(key, value)
 
+        self.cow.commit()
+
         for key, value in keyvalues:
             self.assertEqual(self.cow.lookup(key), value)
 
@@ -84,6 +87,7 @@ class CowTreeTests(unittest.TestCase):
         cow2 = obnamlib.CowTree()
         cow2.set_leaf_store(self.ls)
         cow2.set_list_node(list_id)
+        self.assertEqual(list(cow2.keys()), [key])
         self.assertEqual(cow2.lookup(key), value)
 
     def test_iterates_over_leaf_keys(self):
