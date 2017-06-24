@@ -1,4 +1,4 @@
-# Copyright 2015-2016  Lars Wirzenius
+# Copyright 2015-2017  Lars Wirzenius
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@ from .client_list import GAClientList
 from .chunk_store import GAChunkStore
 from .leaf_store import InMemoryLeafStore, LeafStore
 from .leaf import CowLeaf
+from .leaf_list import LeafList
 from .cowtree import CowTree
 from .indexes import GAChunkIndexes
 from .dirobj import GADirectory, GAImmutableError, create_gadirectory_from_dict

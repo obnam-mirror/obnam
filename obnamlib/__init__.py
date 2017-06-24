@@ -1,4 +1,4 @@
-# Copyright (C) 2009-2016  Lars Wirzenius
+# Copyright (C) 2009-2017  Lars Wirzenius
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -190,6 +190,7 @@ from .fmt_ga import (
     LeafStore,
     CowLeaf,
     CowTree,
+    LeafList,
 )
 
 
