@@ -104,7 +104,7 @@ class ObnamFuseFile(object):
 
         try:
             self.metadata = self.fuse_fs.get_metadata_in_generation(path)
-        except:
+        except BaseException:
             logging.error('Unexpected exception', exc_info=True)
             raise
 
@@ -342,7 +342,7 @@ class ObnamFuse(fuse.Fuse):
                 return self.get_stat_in_generation(path)
         except obnamlib.ObnamError:
             raise IOError(errno.ENOENT, 'No such file or directory')
-        except:
+        except BaseException:
             logging.error('Unexpected exception', exc_info=True)
             raise
 
@@ -360,7 +360,7 @@ class ObnamFuse(fuse.Fuse):
             return [fuse.Direntry(name) for name in ['.', '..'] + listdir]
         except obnamlib.ObnamError:
             raise IOError(errno.EINVAL, 'Invalid argument')
-        except:
+        except BaseException:
             logging.error('Unexpected exception', exc_info=True)
             raise
 
@@ -376,7 +376,7 @@ class ObnamFuse(fuse.Fuse):
                 raise IOError(errno.EINVAL, 'Invalid argument')
         except obnamlib.ObnamError:
             raise IOError(errno.ENOENT, 'No such file or directory')
-        except:
+        except BaseException:
             logging.error('Unexpected exception', exc_info=True)
             raise
 
@@ -449,7 +449,7 @@ class ObnamFuse(fuse.Fuse):
                 return value
         except obnamlib.ObnamError:
             raise IOError(errno.ENOENT, 'No such file or directory')
-        except:
+        except BaseException:
             logging.error('Unexpected exception', exc_info=True)
             raise
 
@@ -480,7 +480,7 @@ class ObnamFuse(fuse.Fuse):
             return name_blob.split('\0')[:-1]
         except obnamlib.ObnamError:
             raise IOError(errno.ENOENT, 'No such file or directory')
-        except:
+        except BaseException:
             logging.error('Unexpected exception', exc_info=True)
             raise
 
