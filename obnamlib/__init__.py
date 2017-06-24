@@ -191,6 +191,8 @@ from .fmt_ga import (
     CowLeaf,
     CowTree,
     LeafList,
+    CowDelta,
+    removed_key,
 )
 
 

@@ -1,4 +1,4 @@
-# Copyright 2015-2017  Lars Wirzenius
+# Copyright 2017  Lars Wirzenius
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,15 +15,26 @@
 #
 # =*= License: GPL-3+ =*=
 
-from .client_list import GAClientList
-from .chunk_store import GAChunkStore
-from .leaf_store import InMemoryLeafStore, LeafStore
-from .leaf import CowLeaf
-from .leaf_list import LeafList
-from .cowdelta import CowDelta, removed_key
-from .cowtree import CowTree
-from .indexes import GAChunkIndexes
-from .dirobj import GADirectory, GAImmutableError, create_gadirectory_from_dict
-from .tree import GATree
-from .client import GAClient
-from .format import RepositoryFormatGA, GREEN_ALBATROSS_VERSION
+
+class CowDelta(object):
+
+    def __init__(self):
+        self._dict = {}
+
+    def __contains__(self, key):
+        return key in self._dict
+
+    def keys(self):
+        return self._dict.keys()
+
+    def set(self, key, value):
+        self._dict[key] = value
+
+    def get(self, key):
+        return self._dict[key]
+
+    def remove(self, key):
+        self._dict[key] = removed_key
+
+
+removed_key = object()
