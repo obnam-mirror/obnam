@@ -98,7 +98,7 @@ class CowTree(object):
 
     def _add_leaf(self, leaf_list, leaf):
         leaf_id = self._store.put_leaf(leaf)
-        keys = leaf.keys()
+        keys = list(sorted(leaf.keys()))
         leaf_list.add(leaf_id, keys[0], keys[-1])
 
     def _put_leaf_list(self, leaf_list):
