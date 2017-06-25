@@ -8,7 +8,7 @@ development, called `green-albatross-20160813`. It is **NOT** meant
 for real use. It is likely to change in incompatible ways without
 warning. DO NOT USE it unless you're willing to lose your backup.
 
-Version 1.21+git, not yet released
+Version 1.22, released 2017-06-25
 ----------------------------------
 
 * Lars Wirzenius made Obnam log the full text of an Obnam
