@@ -29,7 +29,7 @@ class LeafList(object):
         ll = LeafList()
         for leaf_info in serialised:
             ll.add(
-                leaf_info['leaf_id'],
+                leaf_info['id'],
                 leaf_info['first_key'],
                 leaf_info['last_key']
             )
@@ -39,7 +39,7 @@ class LeafList(object):
         return len(self._leaves)
 
     def leaves(self):
-        return [leaf_info['leaf_id'] for leaf_info in self._leaves]
+        return [leaf_info['id'] for leaf_info in self._leaves]
 
     def add(self, leaf_id, first_key, last_key):
         if any(self.find_leaf(k) for k in [first_key, last_key]):
@@ -49,12 +49,12 @@ class LeafList(object):
         self._leaves.append({
             'first_key': first_key,
             'last_key': last_key,
-            'leaf_id': leaf_id,
+            'id': leaf_id,
         })
         self._leaves.sort(key=lambda x: (x['first_key'], x['last_key']))
 
     def find_leaf(self, key):
         for leaf_info in self._leaves:
             if leaf_info['first_key'] <= key <= leaf_info['last_key']:
-                return leaf_info['leaf_id']
+                return leaf_info['id']
         return None
