@@ -22,15 +22,18 @@ OUTPUT="$1"
 TITLE="$2"
 AUTHOR="$3"
 VERSION="$4"
-shift 4
+LANG="$5"
+TRANSLATOR="$6"
+shift 6
 
 cat > 000.mdwn <<EOF
 % $TITLE
 % $AUTHOR
+  $TRANSLATOR
 % $VERSION
 EOF
 
 pandoc  -H ../obnam.css --smart --toc --chapters --number-sections \
-    --standalone --self-contained -V geometry:lettersize \
+    --standalone --self-contained -V lang="$LANG" -V geometry:a4paper \
     -o "$OUTPUT" 000.mdwn "$@"
 rm -f 000.mdwn

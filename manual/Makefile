@@ -18,8 +18,9 @@
 
 TITLE_EN = Backups with Obnam
 TITLE_DE = Backups mit Obnam
-TITLE_FR = Sauvegardes avec Obnam
 TRANS_DE = Übersetzung: Jan Niggemann (jn@hz6.de)
+TITLE_FR = Sauvegardes avec Obnam
+TRANS_FR = Traduction : Pierrick Martinez, Remi Rampin
 AUTHOR = Lars Wirzenius (liw@liw.fi)
 VERSION = Version $(shell git describe || python ../setup.py --version)
 
@@ -27,13 +28,13 @@ en_sources = $(shell ls en/*.mdwn)
 fr_sources = $(shell ls fr/*.mdwn)
 de_sources = $(shell ls de/*.mdwn)
 pdfs = \
-        obnam-manual.en.pdf \
+	obnam-manual.en.pdf \
 	obnam-manual.fr.pdf \
-        obnam-manual.de.pdf
+	obnam-manual.de.pdf
 htmls = \
-        obnam-manual.en.html \
+	obnam-manual.en.html \
 	obnam-manual.fr.html \
-        obnam-manual.de.html
+	obnam-manual.de.html
 
 all: html pdf
 
@@ -42,25 +43,33 @@ html: $(htmls)
 pdf: $(pdfs)
 
 obnam-manual.en.pdf: Makefile $(en_sources)
-	./format-pdf $@ "$(TITLE_EN)" "$(AUTHOR)" "$(VERSION)" $(en_sources)
+	./format-pdf $@ \
+		"$(TITLE_DE)" "$(AUTHOR)" "$(VERSION)" "english" "" \
+		$(en_sources)
 
 obnam-manual.en.html: Makefile $(en_sources) ../obnam.css
-	./format-html $@ "$(TITLE_EN)" "$(AUTHOR)" "$(VERSION)" $(en_sources)
+	./format-html $@ \
+		"$(TITLE_DE)" "$(AUTHOR)" "$(VERSION)" "english" "" \
+		$(en_sources)
 
 obnam-manual.fr.pdf: Makefile $(fr_sources)
-	./format-pdf $@ "$(TITLE_FR)" "$(AUTHOR)" "$(VERSION)" $(fr_sources)
+	./format-pdf $@ \
+		"$(TITLE_DE)" "$(AUTHOR)" "$(VERSION)" "french" "$(TRANS_FR)" \
+		$(fr_sources)
 
 obnam-manual.fr.html: Makefile $(fr_sources) ../obnam.css
-	./format-html $@ "$(TITLE_FR)" "$(AUTHOR)" "$(VERSION)" $(fr_sources)
+	./format-html $@ \
+		"$(TITLE_FR)" "$(AUTHOR)" "$(VERSION)" "french" "$(TRANS_FR)" \
+		$(fr_sources)
 
 obnam-manual.de.pdf: Makefile $(de_sources)
-	./format-de-pdf $@ \
-		"$(TITLE_DE)" "$(AUTHOR)" "$(VERSION)" "$(TRANS_DE)" \
+	./format-pdf $@ \
+		"$(TITLE_DE)" "$(AUTHOR)" "$(VERSION)" "german" "$(TRANS_DE)" \
 		$(de_sources)
 
 obnam-manual.de.html: Makefile $(de_sources) ../obnam.css
-	./format-de-html $@ \
-		"$(TITLE_DE)" "$(AUTHOR)" "$(VERSION)" "$(TRANS_DE)" \
+	./format-html $@ \
+		"$(TITLE_DE)" "$(AUTHOR)" "$(VERSION)" "german" "$(TRANS_DE)" \
 		$(de_sources)
 
 clean:
