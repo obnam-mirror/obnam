@@ -44,7 +44,7 @@ pdf: $(pdfs)
 
 obnam-manual.en.pdf: Makefile $(en_sources)
 	./format-pdf $@ \
-		"$(TITLE_DE)" "$(AUTHOR)" "$(VERSION)" "english" "" \
+		"$(TITLE_DE)" "$(AUTHOR)" "$(VERSION)" "en" "" \
 		$(en_sources)
 
 obnam-manual.en.html: Makefile $(en_sources) ../obnam.css
@@ -54,7 +54,7 @@ obnam-manual.en.html: Makefile $(en_sources) ../obnam.css
 
 obnam-manual.fr.pdf: Makefile $(fr_sources)
 	./format-pdf $@ \
-		"$(TITLE_DE)" "$(AUTHOR)" "$(VERSION)" "french" "$(TRANS_FR)" \
+		"$(TITLE_DE)" "$(AUTHOR)" "$(VERSION)" "fr" "$(TRANS_FR)" \
 		$(fr_sources)
 
 obnam-manual.fr.html: Makefile $(fr_sources) ../obnam.css
@@ -64,7 +64,7 @@ obnam-manual.fr.html: Makefile $(fr_sources) ../obnam.css
 
 obnam-manual.de.pdf: Makefile $(de_sources)
 	./format-pdf $@ \
-		"$(TITLE_DE)" "$(AUTHOR)" "$(VERSION)" "german" "$(TRANS_DE)" \
+		"$(TITLE_DE)" "$(AUTHOR)" "$(VERSION)" "de" "$(TRANS_DE)" \
 		$(de_sources)
 
 obnam-manual.de.html: Makefile $(de_sources) ../obnam.css
