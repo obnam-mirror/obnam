@@ -74,6 +74,13 @@ class LeafStore(LeafStoreInterface):  # pragma: no cover
 
     def get_leaf(self, leaf_id):
         tracing.trace('leaf_id %s', leaf_id)
+
+        blob = self._blob_store.get_blob(leaf_id)
+        if blob is None:
+            tracing.trace('no blob for leaf %r', leaf_id)
+            return None
+
+        tracing.trace('got blob for leaf %r', leaf_id)
         leaf = obnamlib.CowLeaf()
         leaf.from_dict(self._blob_store.get_blob(leaf_id))
         return leaf
