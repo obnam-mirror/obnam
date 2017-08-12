@@ -1,4 +1,4 @@
-# Copyright 2015-2016  Lars Wirzenius
+# Copyright 2015-2017  Lars Wirzenius
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -95,7 +95,7 @@ class BagStore(object):
         filename = self._make_bag_filename(bag_id)
         try:
             self._fs.remove(filename)
-        except EnvironmentError as e:
+        except EnvironmentError as e:  # pragma: no cover
             logging.warning(
                 'Tried to delete %s which does not exist:%d:%s',
                 filename, e.errno, str(e))
