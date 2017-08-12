@@ -72,9 +72,10 @@ class CowTree(object):
         leaf_ids = self._leaf_list.leaves()
         for leaf_id in leaf_ids:
             leaf = self._store.get_leaf(leaf_id)
-            for key in leaf.keys():
-                if key not in delta_keys:
-                    yield key
+            if leaf:
+                for key in leaf.keys():
+                    if key not in delta_keys:
+                        yield key
 
     def commit(self):
         tracing.trace('start comitting')
