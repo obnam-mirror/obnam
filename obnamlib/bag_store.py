@@ -17,8 +17,11 @@
 
 
 import errno
+import logging
 import os
 import random
+
+import tracing
 
 import obnamlib
 
@@ -54,7 +57,9 @@ class BagStore(object):
         self._id_inventor.set_fs(fs)
 
     def reserve_bag_id(self):
-        return self._id_inventor.reserve_id()
+        reserved = self._id_inventor.reserve_id()
+        tracing.trace('id=%r', reserved)
+        return reserved
 
     def put_bag(self, bag):
         filename = self._make_bag_filename(bag.get_id())
@@ -88,7 +93,12 @@ class BagStore(object):
 
     def remove_bag(self, bag_id):
         filename = self._make_bag_filename(bag_id)
-        self._fs.remove(filename)
+        try:
+            self._fs.remove(filename)
+        except EnvironmentError as e:
+            logging.warning(
+                'Tried to delete %s which does not exist:%d:%s',
+                filename, e.errno, str(e))
 
 
 class IdInventor(object):
